@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EarnHub – Free Income</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@600;800&display=swap">
+<style>
+:root{--bg:#0a0b1e;--bg2:#12143a;--card:rgba(255,255,255,.06);--line:rgba(255,255,255,.12);--tx:#eef0ff;--mut:#9aa0cf;--cy:#2de2e6;--mg:#ff3d9a;--gd:#ffc93c;--ok:#4be38a;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;background:radial-gradient(800px 460px at 85% -10%,#6e1a5a55,transparent),radial-gradient(600px 400px at -10% 40%,#0b5a7a33,transparent),var(--bg);color:var(--tx);font-family:"Hind Siliguri",system-ui,sans-serif;line-height:1.55;min-height:100vh;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+h1,h2,h3{font-family:Sora,"Hind Siliguri",sans-serif;margin:0}
+.app{max-width:560px;margin:0 auto;padding:0 16px}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+.logo{font:800 20px Sora,sans-serif}.logo b{color:var(--mg)}
+.hr{display:flex;gap:8px;align-items:center;position:relative}
+.bal{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 12px;font:700 15px Sora,sans-serif;color:var(--gd)}
+.dots{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--tx);font-size:22px;cursor:pointer}
+.menu{position:absolute;right:0;top:48px;background:#181b4a;border:1px solid var(--line);border-radius:14px;min-width:200px;padding:6px;z-index:15;box-shadow:0 14px 30px #000a;display:none}
+.menu.on{display:block}
+.menu button{display:flex;align-items:center;width:100%;text-align:left;background:none;border:0;color:var(--tx);font:500 16px "Hind Siliguri",sans-serif;padding:8px 10px;border-radius:10px;cursor:pointer}
+.menu button:hover{background:var(--card)}
+.mi{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:9px;margin-right:10px;background:var(--card);font-size:15px}
+.btn{border:0;cursor:pointer;font:600 16px "Hind Siliguri",sans-serif;color:#06112a;padding:12px 22px;border-radius:14px;background:linear-gradient(180deg,#6ff3f5,var(--cy));box-shadow:0 5px 0 #138a90,0 10px 20px #2de2e633;transition:transform .12s,box-shadow .12s;text-decoration:none;display:inline-block;text-align:center}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #138a90}
+.btn.mg{color:#fff;background:linear-gradient(180deg,#ff72b8,var(--mg));box-shadow:0 5px 0 #a3185f}
+.btn.gd{background:linear-gradient(180deg,#ffe28a,var(--gd));box-shadow:0 5px 0 #b98400}
+.btn.gd:active{box-shadow:0 1px 0 #b98400}
+.btn.sm{padding:6px 14px;font-size:14px;border-radius:10px;box-shadow:0 3px 0 #138a90}
+.btn[disabled]{filter:grayscale(1) brightness(.6);cursor:not-allowed}
+.full{width:100%;display:block}
+:focus-visible{outline:3px solid var(--gd);outline-offset:2px}
+.theme{position:relative;border-radius:22px;overflow:hidden;margin:6px 0 4px;height:170px;box-shadow:0 10px 0 #0005,0 18px 36px #0006}
+.sl{position:absolute;inset:0;padding:22px;display:flex;flex-direction:column;justify-content:flex-end;opacity:0;transition:opacity .6s;cursor:pointer;border:0;color:#fff;text-align:left;width:100%;font-family:inherit}
+.sl.on{opacity:1}
+.sl b{font:800 22px Sora,sans-serif}.sl span{opacity:.92}
+.sl .tag{position:absolute;top:14px;right:14px;background:#0006;border-radius:99px;padding:2px 10px;font-size:12px}
+.dts{display:flex;gap:6px;justify-content:center;margin:10px 0 0}
+.dts i{width:7px;height:7px;border-radius:9px;background:var(--line);transition:all .3s}.dts i.on{width:20px;background:var(--cy)}
+h3.sec{font-size:18px;margin:22px 0 10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bn{border:1px solid var(--line);border-radius:18px;padding:14px;background:linear-gradient(160deg,var(--bg2),#0d0f2b);box-shadow:0 6px 0 #0005}
+.bn .e{font-size:26px}.bn b{display:block}.bn .mut{margin-bottom:8px}
+.vip{grid-column:1/-1;display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#6a4a00,#2a1c00 70%);border-color:#ffc93c66}
+.vip>div{flex:1}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.price{color:var(--gd);font-weight:700}
+.mut{color:var(--mut);font-size:14px}
+label{display:block;font-size:14px;color:var(--mut);margin:12px 0 4px}
+input,select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#0a0c2e;color:var(--tx);font:16px "Hind Siliguri",sans-serif}
+.tot{font:800 22px Sora,sans-serif;color:var(--cy)}
+.err{color:#ff8aa8;font-size:14px;min-height:20px;margin:6px 0}
+.badge{padding:2px 10px;border-radius:99px;font-size:13px;font-weight:600}
+.pend{background:#ffc93c22;color:var(--gd)}.done{background:#4be38a22;color:var(--ok)}
+.wheelbox{position:relative;width:min(300px,84vw);aspect-ratio:1;margin:8px auto 16px}
+.wheelbox canvas{width:100%;height:100%;border-radius:50%;box-shadow:0 0 0 8px #2a2d6e,0 0 0 12px var(--gd),0 0 44px #ffc93c66,0 14px 0 8px #0006;transition:transform 5s cubic-bezier(.12,.7,.1,1)}
+.ptr{position:absolute;left:50%;top:-14px;transform:translateX(-50%);width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:28px solid var(--mg);filter:drop-shadow(0 3px 0 #0008);z-index:2}
+.hub{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3b0,var(--gd));display:grid;place-items:center;font:800 20px Sora,sans-serif;color:#7a4a00;box-shadow:0 4px 0 #b98400;z-index:2}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:#00000044;border-radius:14px;padding:4px;margin-bottom:12px}
+.tabs.t3{grid-template-columns:repeat(3,1fr)}
+.tabs button{border:0;background:none;color:var(--mut);font:600 15px "Hind Siliguri",sans-serif;padding:9px 4px;border-radius:11px;cursor:pointer}
+.tabs button.on{background:var(--card);color:var(--tx)}
+.pk{border-radius:20px;padding:18px;margin-bottom:14px;border:1px solid var(--line);box-shadow:0 8px 0 #0005}
+.pk h3{font-size:20px}.pk ul{margin:8px 0 12px;padding-left:18px;color:var(--mut)}
+.p0{background:linear-gradient(150deg,#1b2050,#10132e)}.p1{background:linear-gradient(150deg,#4a5568,#1e2538)}.p2{background:linear-gradient(150deg,#8a6a10,#2a2108)}.p3{background:linear-gradient(150deg,#1a7a96,#16206a)}
+.tk{display:flex;align-items:center;gap:12px}
+.tk .ti{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:linear-gradient(135deg,#6a2cc9,#c2268a);box-shadow:inset 0 -4px 0 #0004;flex:none}
+.tk.v .ti{background:linear-gradient(135deg,#e62117,#7a1010)}
+.tk>div:nth-child(2){flex:1;min-width:0}
+.lk{font-size:13px;color:var(--cy);word-break:break-all}
+.pod{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:8px;align-items:end;margin:6px 0 16px;text-align:center}
+.pc{border-radius:18px 18px 8px 8px;padding:12px 4px 10px;border:1px solid var(--line);box-shadow:0 6px 0 #0005}
+.pc.g1{background:linear-gradient(180deg,#a37b00,#3a2a00);min-height:170px;border-color:#ffc93c99;box-shadow:0 6px 0 #0005,0 0 30px #ffc93c44}
+.pc.g2{background:linear-gradient(180deg,#6b7488,#232838);min-height:140px}
+.pc.g3{background:linear-gradient(180deg,#8a5a34,#2a1a0e);min-height:125px}
+.av{width:46px;height:46px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;font:800 17px Sora,sans-serif;background:linear-gradient(135deg,var(--cy),var(--mg));color:#06112a;box-shadow:0 3px 0 #0006}
+.pc .cr{font-size:20px;height:24px}
+.pc b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 4px}
+.rk{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--line)}
+.rk .n{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:700 14px Sora,sans-serif;background:var(--card)}
+.me{border:1px solid var(--cy);box-shadow:0 0 24px #2de2e633;background:linear-gradient(135deg,#0d3a5a,#16206a)}
+.bar{height:10px;border-radius:9px;background:#0007;overflow:hidden;margin:10px 0}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cy),var(--mg));transition:width 1s linear}
+.refc{font:800 26px Sora,sans-serif;letter-spacing:3px;color:var(--gd);text-align:center;border:2px dashed #ffc93c88;border-radius:14px;padding:10px;margin:10px 0}
+.feed .f{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);animation:fi .5s}
+@keyframes fi{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok);animation:pl 1.4s infinite}
+@keyframes pl{50%{opacity:.3}}
+.promo{border-radius:18px;padding:18px;margin-bottom:12px;color:#fff;box-shadow:0 6px 0 #0005}
+.promo b{font:700 19px Sora,sans-serif}
+.pay{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0}
+.pay button{border:2px solid var(--line);background:var(--card);color:var(--tx);border-radius:14px;padding:12px;font:600 16px "Hind Siliguri",sans-serif;cursor:pointer}
+.pay button.on{border-color:var(--cy);box-shadow:0 0 18px #2de2e655}
+.num{font:700 20px Sora,sans-serif;letter-spacing:1px;color:var(--gd)}
+nav.tab{position:fixed;left:0;right:0;bottom:0;background:#0d0f2bee;border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px);z-index:10}
+nav.tab div{display:grid;grid-template-columns:repeat(5,1fr);width:100%;max-width:560px}
+nav.tab button{background:none;border:0;color:var(--mut);font:500 12px "Hind Siliguri",sans-serif;padding:10px 0;cursor:pointer}
+nav.tab button span{display:block;font-size:22px}
+nav.tab button.on{color:var(--mg)}
+.ms{padding:10px 12px;border-bottom:1px solid var(--line);margin-bottom:4px}.pav{width:64px;height:64px;border-radius:50%;overflow:hidden;background:var(--card);display:grid;place-items:center;font-size:28px;border:2px solid var(--mg);flex:none}.mini{background:#0003;border-radius:12px;padding:8px 4px;text-align:center}.mini b{display:block;font:800 18px Sora,sans-serif}.mini span{font-size:12px}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--ok);color:#04230f;padding:10px 20px;border-radius:99px;font-weight:600;display:none;z-index:30;text-align:center}
+.ov{position:fixed;inset:0;background:#020312dd;display:none;align-items:center;justify-content:center;z-index:25;padding:20px}
+.ov.on{display:flex}
+.mb{width:100%;max-width:380px;background:#181b4a;border:1px solid var(--line);border-radius:22px;padding:22px;text-align:center}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">Earn<b>Hub</b> <span class="mut" style="font:500 13px 'Hind Siliguri'">Free Income</span></div>
+    <div class="hr">
+      <div class="bal" id="bal">৳0</div>
+      <button class="dots" id="dots" aria-label="মেনু">⋮</button>
+      <div class="menu" id="menu"><div class="ms" id="msum"></div>
+        <button data-go="pack"><span class="mi">💎</span>প্যাকেজ</button>
+        <button data-go="ref"><span class="mi">🤝</span>রেফারেল</button>
+        <button data-go="support"><span class="mi">🎧</span>কাস্টমার কেয়ার</button>
+        <button data-go="about"><span class="mi">ℹ️</span>About</button>
+      </div>
+    </div>
+  </header>
+  <main id="view"></main>
+</div>
+<nav class="tab"><div>
+  <button data-go="home" class="on"><span>🏠</span>হোম</button>
+  <button data-go="task"><span>✅</span>টাস্ক</button>
+  <button data-go="promo"><span>📣</span>প্রমোশন</button>
+  <button data-go="rank"><span>🏆</span>র‍্যাংকিং</button>
+  <button data-go="acc"><span>👤</span>অ্যাকাউন্ট</button>
+</div></nav>
+<div class="toast" id="toast" role="status"></div>
+<div class="ov" id="ov"><div class="mb"><h3 id="mt">টাস্ক চলছে</h3><p class="mut" id="mp"></p><a class="btn full" id="ml" href="#" target="_blank" rel="noopener">অফিসিয়াল লিংক খুলুন</a><div class="bar"><i id="mbar"></i></div><div class="tot" id="mc">10</div><button class="btn gd full" id="mclaim" style="margin-top:14px" disabled>রিওয়ার্ড নিন</button><button class="btn sm" id="mx" style="margin-top:12px;background:var(--card);color:var(--tx);box-shadow:none">বাতিল</button></div></div>
+
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)};
+function ld(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+var DAY=864e5,today=new Date().toDateString();
+/* অ্যাডমিন প্যানেল থেকে এই সব ডাটা কন্ট্রোল হবে */
+var CFG={
+ banners:[['TechMart BD','সব গ্যাজেটে ২০% ছাড়','linear-gradient(135deg,#1a7a96,#16206a)'],['FoodieGo','প্রথম অর্ডারে ফ্রি ডেলিভারি','linear-gradient(135deg,#e8501c,#a31d5c)'],['LearnFast','অনলাইন কোর্সে বিশেষ অফার','linear-gradient(135deg,#6a2cc9,#2b1a7a)']],
+ pk:[{n:'Free',pr:0,lim:4,rw:1,c:'p0'},{n:'Silver',pr:500,lim:8,rw:4,c:'p1'},{n:'Gold',pr:1500,lim:10,rw:12,c:'p2'},{n:'Diamond',pr:5000,lim:10,rw:45,c:'p3'}],
+ bn:[{k:'daily',n:'ডেইলি বোনাস',e:'🎁',v:2,t:DAY},{k:'login',n:'লগইন বোনাস',e:'🔑',v:1,t:DAY},{k:'week',n:'সাপ্তাহিক বোনাস',e:'📅',v:20,t:7*DAY},{k:'month',n:'মাসিক বোনাস',e:'🗓️',v:100,t:30*DAY}],
+ vip:{v:500,t:30*DAY,min:2},
+ ad:[['স্পনসর বিজ্ঞাপন দেখুন','https://example.com/ad1'],['ব্যানার বিজ্ঞাপন ভিজিট','https://example.com/ad2'],['অ্যাপ প্রমো দেখুন','https://example.com/ad3'],['অফার বিজ্ঞাপন দেখুন','https://example.com/ad4']],
+ vid:[['YouTube ভিডিও দেখুন','https://www.youtube.com'],['TikTok ভিডিও দেখুন','https://www.tiktok.com'],['Facebook রিলস দেখুন','https://www.facebook.com'],['Instagram রিলস দেখুন','https://www.instagram.com']],
+ pr:[['TechMart BD','গ্যাজেট স্টোর ভিজিট করুন','https://example.com/techmart',6,'linear-gradient(135deg,#1a7a96,#16206a)'],['FoodieGo','অ্যাপ ইনস্টল পেজ দেখুন','https://example.com/foodiego',8,'linear-gradient(135deg,#e8501c,#a31d5c)'],['LearnFast','ফ্রি কোর্স দেখুন','https://example.com/learnfast',5,'linear-gradient(135deg,#6a2cc9,#2b1a7a)'],['PayEasy','ওয়ালেট অফার দেখুন','https://example.com/payeasy',10,'linear-gradient(135deg,#0f8a5a,#164a6a)'],['TravelBD','ট্যুর প্যাকেজ দেখুন','https://example.com/travelbd',7,'linear-gradient(135deg,#c2268a,#f08a1c)'],['StyleHub','ফ্যাশন কালেকশন দেখুন','https://example.com/stylehub',6,'linear-gradient(135deg,#444c8a,#1a1d4a)']],
+ wv:[5,10,2,20,5,1,10,50,5,2,20,10,1,5,100,2],ww:[14,10,16,3,14,18,10,1,14,16,3,10,18,14,.3,16],
+ refSignup:20,refPct:5
+};
+var LV=[['Bronze',0,'🥉'],['Silver',500,'🥈'],['Gold',2000,'🥇'],['Platinum',8000,'💠'],['Diamond',25000,'💎']];
+var S=ld('fi2',{bal:0,earn:0,pk:0,last:{},done:{d:today,t:{}},spin:'',deps:[],wd:[],code:'EH'+Math.random().toString(36).slice(2,7).toUpperCase(),refs:[]});
+if(S.done.d!==today)S.done={d:today,t:{}};if(S.photo===undefined)S.photo='';if(!S.td||S.td.d!==today)S.td={d:today,e:0};
+function persist(){sv('fi2',S)}
+function head(){$('#bal').textContent='৳'+S.bal.toFixed(0)}
+function toast(m){var t=$('#toast');t.textContent=m;t.style.display='block';setTimeout(function(){t.style.display='none'},2200)}
+function add(n){S.bal+=n;S.earn+=n;if(S.td.d!==today)S.td={d:today,e:0};S.td.e+=n;persist();head();msum()}
+function cnt(){return Object.keys(S.done.t).filter(function(k){return k[0]!=='p'}).length}
+function left(k,t){return (S.last[k]||0)+t-Date.now()}
+function fmt(ms){var h=Math.ceil(ms/36e5);return h>24?Math.ceil(h/24)+' দিন':h+' ঘণ্টা'}
+var rot=0,spinning=false,tm=null,sl=null,page='home',tt='ad',rt='week';
+
+/* লাইভ ট্রানজ্যাকশন */
+var NM=['ra***77','su***ni','ta***bd','nu***at','sa***20','mi***ro','ha***li','ar***an','jo***ya','fa***ma'],AM=[50,100,200,300,500,1000,1500,2000],F=[];
+function fitem(n,k,a){return {n:n,k:k,a:a}}
+for(var i=0;i<5;i++)F.push(fitem(NM[i],i%3?'ডিপোজিট':'উইথড্র',AM[(i*3)%8]));
+function feedHtml(){return F.slice(0,6).map(function(f){var d=f.k==='ডিপোজিট';return '<div class="f"><span class="dot"></span><div style="flex:1"><b>'+f.n+'</b> <span class="mut">'+f.k+' করেছে</span></div><b style="color:'+(d?'var(--ok)':'var(--gd)')+'">'+(d?'+':'-')+'৳'+f.a+'</b></div>'}).join('')}
+setInterval(function(){F.unshift(fitem(NM[Math.floor(Math.random()*NM.length)],Math.random()<.65?'ডিপোজিট':'উইথড্র',AM[Math.floor(Math.random()*AM.length)]));F.length=Math.min(F.length,12);var e=$('#feed');if(e)e.innerHTML=feedHtml()},3500);
+
+function home(){
+ var h='<div class="theme" id="theme">';CFG.banners.forEach(function(b,i){h+='<button class="sl'+(i?'':' on')+'" data-go="promo" style="background:'+b[2]+'"><span class="tag">স্পনসর</span><b>'+b[0]+'</b><span>'+b[1]+'</span></button>'});
+ h+='</div><div class="dts" id="dts">';CFG.banners.forEach(function(b,i){h+='<i class="'+(i?'':'on')+'"></i>'});
+ h+='</div><h3 class="sec">ফ্রি লাকি স্পিন</h3><div class="wheelbox"><div class="ptr"></div><canvas id="wh" width="600" height="600"></canvas><div class="hub">৳</div></div><button class="btn mg full" id="sp"'+(S.spin===today?' disabled':'')+'>'+(S.spin===today?'আজকের স্পিন শেষ, কাল আবার':'স্পিন করুন')+'</button>';
+ h+='<h3 class="sec">বোনাস</h3><div class="grid">';
+ CFG.bn.forEach(function(b){var r=left(b.k,b.t);h+='<div class="bn"><div class="e">'+b.e+'</div><b>'+b.n+'</b><div class="mut">৳'+b.v+'</div><button class="btn sm" data-bn="'+b.k+'"'+(r>0?' disabled':'')+'>'+(r>0?fmt(r)+' পরে':'নিন')+'</button></div>'});
+ var vr=left('vip',CFG.vip.t),ok=S.pk>=CFG.vip.min;
+ h+='<div class="bn vip"><div class="e">👑</div><div><b>মাসিক VIP বোনাস</b><div class="mut" style="margin:0">৳'+CFG.vip.v+(ok?'':' · '+CFG.pk[CFG.vip.min].n+' প্যাকেজ লাগবে')+'</div></div><button class="btn gd sm" data-bn="vip"'+((vr>0||!ok)?' disabled':'')+'>'+(vr>0?fmt(vr)+' পরে':'নিন')+'</button></div></div>';
+ h+='<h3 class="sec"><span class="dot" style="display:inline-block;margin-right:8px"></span>লাইভ ট্রানজ্যাকশন</h3><div class="card feed" id="feed" aria-live="polite">'+feedHtml()+'</div>';
+ h+='<h3 class="sec">About</h3><div class="card mut">EarnHub-এ ছোট কাজ করে আয়ের সুযোগ। (ডেমো লেখা, পরে আপনার কোম্পানির তথ্য বসবে।)</div>';return h}
+function draw(){var c=$('#wh');if(!c)return;var x=c.getContext('2d'),r=300,a=Math.PI*2/16,cols=['#c2268a','#3b1c8f'];
+ for(var i=0;i<16;i++){x.beginPath();x.moveTo(r,r);x.arc(r,r,r,-Math.PI/2+i*a,-Math.PI/2+(i+1)*a);x.fillStyle=CFG.wv[i]>=50?'#e0a900':cols[i%2];x.fill();x.strokeStyle='#ffffff55';x.lineWidth=2;x.stroke();
+  x.save();x.translate(r,r);x.rotate(-Math.PI/2+(i+.5)*a);x.fillStyle='#fff';x.font='700 34px Sora,sans-serif';x.textAlign='right';x.fillText('৳'+CFG.wv[i],r-26,12);x.restore()}}
+function spin(){if(spinning||S.spin===today)return;spinning=true;
+ var t=CFG.ww.reduce(function(a,b){return a+b},0),p=Math.random()*t,i=0;for(;i<15;i++){p-=CFG.ww[i];if(p<=0)break}
+ var ctr=i*22.5+11.25;rot=rot-(rot%360)+360*6+(360-ctr);$('#wh').style.transform='rotate('+rot+'deg)';$('#sp').disabled=true;
+ setTimeout(function(){S.spin=today;add(CFG.wv[i]);spinning=false;toast('অভিনন্দন! ৳'+CFG.wv[i]+' জিতেছেন');go('home')},5200)}
+
+function taskRow(k,i,v){var pk=CFG.pk[S.pk],id=k+i,d=S.done.t[id],t=CFG[k][i];
+ return '<div class="card tk'+(v?' v':'')+'"><div class="ti">'+(v?'🎬':'📺')+'</div><div><b>'+t[0]+'</b><div class="mut">১০ সেকেন্ড · ৳'+pk.rw+'</div><div class="lk">'+t[1].replace('https://','')+'</div></div>'+(d?'<span class="badge done">শেষ</span>':'<button class="btn sm" data-tk="'+id+'">শুরু</button>')+'</div>'}
+function task(){var pk=CFG.pk[S.pk],h='<h3 class="sec">আজকের টাস্ক</h3><div class="card row"><div><b>'+pk.n+' প্যাকেজ</b><div class="mut">প্রতি টাস্কে ৳'+pk.rw+' · আজ '+cnt()+'/'+pk.lim+' শেষ</div></div><button class="btn sm" data-go="pack">আপগ্রেড</button></div><div class="tabs"><button data-tt="ad" class="'+(tt==='ad'?'on':'')+'">📺 Ad Earning</button><button data-tt="vid" class="'+(tt==='vid'?'on':'')+'">🎬 Video Earning</button></div>';
+ CFG[tt].forEach(function(x,i){h+=taskRow(tt,i,tt==='vid')});return h}
+var cur=null,curRw=0;
+function startTask(id){var link,rw;
+ if(id[0]==='p'){var p=CFG.pr[+id.slice(1)];link=p[2];rw=p[3]}
+ else{var pk=CFG.pk[S.pk];if(cnt()>=pk.lim){toast('আজকের লিমিট শেষ। প্যাকেজ আপগ্রেড করুন।');return}link=CFG[id.slice(0,id[0]==='a'?2:3)][+id.slice(id[0]==='a'?2:3)][1];rw=pk.rw}
+ cur=id;curRw=rw;var s=10;$('#ml').href=link;$('#mp').textContent='লিংক খুলে ১০ সেকেন্ড অপেক্ষা করুন';$('#mc').textContent=s;$('#mbar').style.transitionDuration='0s';$('#mbar').style.width='0';$('#mclaim').disabled=true;$('#ov').classList.add('on');
+ setTimeout(function(){$('#mbar').style.transitionDuration='10s';$('#mbar').style.width='100%'},40);
+ clearInterval(tm);tm=setInterval(function(){s--;$('#mc').textContent=s;if(s<=0){clearInterval(tm);$('#mclaim').disabled=false;$('#mp').textContent='টাস্ক শেষ, রিওয়ার্ড নিন'}},1000)}
+$('#mclaim').onclick=function(){S.done.t[cur]=1;add(curRw);$('#ov').classList.remove('on');toast('৳'+curRw+' যোগ হয়েছে');go(page)};
+$('#mx').onclick=function(){clearInterval(tm);$('#ov').classList.remove('on')};
+
+function promo(){var h='<h3 class="sec">প্রমোশন</h3><div class="mut" style="margin-bottom:12px">কোম্পানির পেজ ভিজিট করে কাজ শেষ করুন ও বাড়তি রিওয়ার্ড পান।</div>';
+ CFG.pr.forEach(function(p,i){var d=S.done.t['p'+i];h+='<div class="promo" style="background:'+p[4]+'"><div class="row"><b>'+p[0]+'</b><span class="badge" style="background:#0005">৳'+p[3]+'</span></div><div>'+p[1]+'</div><div class="lk" style="color:#fff;opacity:.8;margin:4px 0 10px">'+p[2].replace('https://','')+'</div>'+(d?'<span class="badge done">আজকের কাজ শেষ</span>':'<button class="btn gd sm" data-tk="p'+i+'">কাজ শুরু করুন</button>')+'</div>'});return h}
+
+function pack(){var h='<h3 class="sec">প্যাকেজ</h3>';CFG.pk.forEach(function(p,i){h+='<div class="pk '+p.c+'"><div class="row"><h3>'+p.n+'</h3><span class="price">'+(p.pr?'৳'+p.pr:'ফ্রি')+'</span></div><ul><li>দিনে '+p.lim+'টা টাস্ক</li><li>প্রতি টাস্কে ৳'+p.rw+'</li><li>দিনে সর্বোচ্চ ৳'+p.lim*p.rw+'</li></ul>'+(i===S.pk?'<span class="badge done">বর্তমান প্যাকেজ</span>':(i>S.pk?'<button class="btn gd full" data-pk="'+i+'">কিনুন</button>':''))+'</div>'});return h}
+
+var RL={week:[['Rahim_77',4820],['Sumi Akter',4175],['tanvir.bd',3910],['Nusrat J.',3140],['Sakib420',2780],['Mim_pro',2230],['Hasan Ali',1890]],month:[['Sumi Akter',18400],['Rahim_77',17250],['Nusrat J.',14900],['tanvir.bd',12100],['Mim_pro',9800],['Sakib420',8300],['Hasan Ali',6100]],all:[['Rahim_77',148200],['tanvir.bd',121750],['Sumi Akter',99100],['Nusrat J.',81400],['Sakib420',67800],['Mim_pro',52300],['Hasan Ali',38900]]};
+function ini(n){return n.replace(/[^A-Za-z]/g,'').slice(0,2).toUpperCase()||'আ'}
+function rank(){var L=RL[rt].concat([['আপনি',S.earn]]).sort(function(a,b){return b[1]-a[1]}),h='<h3 class="sec">র‍্যাংকিং</h3><div class="tabs t3"><button data-rt="week" class="'+(rt==='week'?'on':'')+'">সাপ্তাহিক</button><button data-rt="month" class="'+(rt==='month'?'on':'')+'">মাসিক</button><button data-rt="all" class="'+(rt==='all'?'on':'')+'">সর্বমোট</button></div>';
+ var pd=[1,0,2];h+='<div class="pod">';pd.forEach(function(i){var r=L[i];h+='<div class="pc g'+(i+1)+'"><div class="cr">'+(i===0?'👑':'')+'</div><div class="av">'+ini(r[0])+'</div><b>'+r[0]+'</b><div class="price">৳'+r[1].toFixed(0)+'</div><div style="font:800 22px Sora,sans-serif">'+(i+1)+'</div></div>'});h+='</div>';
+ var me=L.findIndex(function(r){return r[0]==='আপনি'}),lv=0;LV.forEach(function(l,i){if(S.earn>=l[1])lv=i});var nx=LV[lv+1],pg=nx?Math.min(100,(S.earn-LV[lv][1])/(nx[1]-LV[lv][1])*100):100;
+ h+='<div class="card me"><div class="row"><div><div class="mut">আপনার র‍্যাংক</div><div class="tot">#'+(me+1)+'</div></div><div style="text-align:right"><div style="font-size:30px">'+LV[lv][2]+'</div><b>'+LV[lv][0]+' লেভেল</b></div></div><div class="bar"><i style="width:'+pg+'%;transition:none"></i></div><div class="mut">'+(nx?nx[0]+' লেভেলে যেতে আরও ৳'+Math.max(0,nx[1]-S.earn).toFixed(0)+' আয় করুন':'সর্বোচ্চ লেভেলে আছেন')+'</div></div><div class="card">';
+ L.forEach(function(r,i){if(i<3)return;var m=r[0]==='আপনি';h+='<div class="rk"'+(m?' style="color:var(--cy);font-weight:700"':'')+'><div class="n">'+(i+1)+'</div><div class="av" style="width:34px;height:34px;margin:0;font-size:13px">'+ini(r[0])+'</div><div style="flex:1">'+r[0]+'</div><span class="price">৳'+r[1].toFixed(0)+'</span></div>'});
+ return h+'</div><div class="mut">ডেমো তালিকা। আসল সিস্টেমে ইউজারদের আয় থেকে আসবে।</div>'}
+
+function ref(){var h='<h3 class="sec">রেফারেল</h3><div class="card"><b>বন্ধুকে ইনভাইট করুন</b><p class="mut">প্রতিটা বন্ধু যোগ দিলে ৳'+CFG.refSignup+' বোনাস, আর তার আয় থেকে আজীবন '+CFG.refPct+'% কমিশন।</p><div class="refc">'+S.code+'</div><div class="pay"><button id="cc">কোড কপি</button><button id="cl">লিংক কপি</button></div></div><div class="grid"><div class="card"><div class="mut">মোট বন্ধু</div><div class="tot">'+S.refs.length+'</div></div><div class="card"><div class="mut">রেফারেল আয়</div><div class="tot">৳'+S.refs.length*CFG.refSignup+'</div></div></div><button class="btn mg full" id="rs">ডেমো: একজন বন্ধু যোগ হলো</button><h3 class="sec">আপনার বন্ধুরা</h3>';
+ if(!S.refs.length)h+='<div class="card mut">এখনো কেউ যোগ দেয়নি। কোড শেয়ার করুন।</div>';S.refs.forEach(function(n){h+='<div class="card row"><div class="row" style="justify-content:flex-start"><div class="av" style="width:34px;height:34px;margin:0;font-size:13px">'+ini(n)+'</div><b>'+n+'</b></div><span class="badge done">+৳'+CFG.refSignup+'</span></div>'});return h}
+
+function about(){return '<h3 class="sec">About</h3><div class="card"><b>EarnHub</b><p class="mut">টাস্ক, বোনাস, রেফারেল ও স্পিনের মাধ্যমে আয়ের প্ল্যাটফর্ম। বিকাশ ও নগদে ডিপোজিট এবং উইথড্র।</p></div><div class="card"><b>কীভাবে কাজ করে</b><p class="mut">প্যাকেজ বেছে নিন, প্রতিদিন টাস্ক করুন, বোনাস নিন, বন্ধুদের ইনভাইট করুন ও ব্যালেন্স উইথড্র করুন।</p></div>'}
+function support(){return '<h3 class="sec">কাস্টমার কেয়ার</h3><div class="card"><b>সাহায্য দরকার?</b><p class="mut">সকাল ১০টা থেকে রাত ১০টা সরাসরি উত্তর পাবেন।</p><div class="pay"><button>WhatsApp</button><button>Telegram</button></div><label>আপনার সমস্যা</label><input id="sm"><button class="btn full" id="ss" style="margin-top:12px">পাঠান</button></div>'}
+
+var wt='dep',pm='bKash',NUM={bKash:'01XXX-XXXXXX',Nagad:'01YYY-YYYYYY'};
+function acc(){var h=prof()+'<div class="card"><div class="mut">ব্যালেন্স</div><div class="tot">৳'+S.bal.toFixed(0)+'</div><div class="mut">মোট আয় ৳'+S.earn.toFixed(0)+' · '+CFG.pk[S.pk].n+' প্যাকেজ</div></div><div class="tabs"><button data-wt="dep" class="'+(wt==='dep'?'on':'')+'">ডিপোজিট</button><button data-wt="wd" class="'+(wt==='wd'?'on':'')+'">উইথড্র</button></div><div class="card"><div class="pay"><button data-pm="bKash" class="'+(pm==='bKash'?'on':'')+'">bKash</button><button data-pm="Nagad" class="'+(pm==='Nagad'?'on':'')+'">Nagad</button></div>';
+ if(wt==='dep')h+='<div class="mut">এই নাম্বারে Send Money করুন:</div><div class="num">'+NUM[pm]+'</div><label>পরিমাণ (৳)</label><input id="wa" type="number" inputmode="numeric" placeholder="কমপক্ষে ৫০"><label>Transaction ID</label><input id="wx"><div class="err" id="we"></div><button class="btn full" id="wb">ডিপোজিট সাবমিট</button>';
+ else h+='<label>আপনার '+pm+' নাম্বার</label><input id="wx" type="tel" inputmode="tel" placeholder="01XXXXXXXXX"><label>পরিমাণ (৳, কমপক্ষে ২০০)</label><input id="wa" type="number" inputmode="numeric"><div class="err" id="we"></div><button class="btn full" id="wb">উইথড্র রিকোয়েস্ট</button>';
+ h+='</div><h3 class="sec">হিস্টোরি</h3>';var H=S.deps.map(function(d){d.k='ডিপোজিট';return d}).concat(S.wd.map(function(d){d.k='উইথড্র';return d})).sort(function(a,b){return b.id-a.id});
+ if(!H.length)h+='<div class="card mut">কোনো হিস্টোরি নেই।</div>';
+ H.forEach(function(d){var ok=d.st==='Approved';h+='<div class="card"><div class="row"><b>'+d.k+' ৳'+d.a+'</b><span class="badge '+(ok?'done':'pend')+'">'+d.st+'</span></div><div class="mut">'+d.m+' · '+d.x+'</div>'+((!ok&&d.k==='ডিপোজিট')?'<button class="btn sm" style="margin-top:8px" data-ap="'+d.id+'">ডেমো: অ্যাডমিন অ্যাপ্রুভ</button>':'')+'</div>'});return h}
+
+function av(){return S.photo?'<img src="'+S.photo+'" alt="প্রোফাইল ছবি" style="width:100%;height:100%;object-fit:cover">':'👤'}
+function sum(){var pk=CFG.pk[S.pk],c=cnt(),pr=Object.keys(S.done.t).filter(function(k){return k[0]==='p'}).length,pd=S.deps.filter(function(d){return d.st==='Pending'}).length+S.wd.filter(function(d){return d.st==='Pending'}).length;return {c:c,l:Math.max(0,pk.lim-c),pr:pr,pd:pd,e:S.td.d===today?S.td.e:0}}
+function sumHtml(s){return '<div class="mini"><b style="color:var(--ok)">'+s.c+'</b><span class="mut">আজ টাস্ক শেষ</span></div><div class="mini"><b style="color:var(--gd)">'+s.l+'</b><span class="mut">টাস্ক বাকি</span></div><div class="mini"><b>'+s.pr+'</b><span class="mut">প্রমোশন শেষ</span></div><div class="mini"><b style="color:var(--gd)">'+s.pd+'</b><span class="mut">পেন্ডিং রিকোয়েস্ট</span></div><div class="mini"><b style="color:var(--cy)">৳'+s.e.toFixed(0)+'</b><span class="mut">আজকের আয়</span></div><div class="mini"><b>৳'+S.earn.toFixed(0)+'</b><span class="mut">মোট আয়</span></div>'}
+function prof(){var s=sum(),pk=CFG.pk[S.pk],pc=Math.min(100,s.c/pk.lim*100);return '<div class="card"><div class="row" style="justify-content:flex-start;gap:14px"><div class="pav">'+av()+'</div><div><b>আমার প্রোফাইল</b> <span class="mut"><span class="dot" style="display:inline-block"></span> লাইভ</span><div class="mut">'+pk.n+' প্যাকেজ</div><label class="btn sm" style="display:inline-block;margin-top:6px;cursor:pointer">ছবি যোগ করুন<input type="file" accept="image/*" id="pf" hidden></label></div></div><div class="bar"><i id="apg" style="width:'+pc+'%;transition:none"></i></div><div class="grid" id="asum" style="grid-template-columns:repeat(3,1fr)">'+sumHtml(s)+'</div></div>'}
+function msum(){var s=sum(),pk=CFG.pk[S.pk];var e=$('#msum');if(!e)return;e.innerHTML='<div class="row" style="justify-content:flex-start;gap:10px"><div class="pav" style="width:38px;height:38px;font-size:18px">'+av()+'</div><b>আজকের টাস্ক</b></div><div class="mut" style="margin-top:6px">শেষ '+s.c+'/'+pk.lim+' · বাকি '+s.l+' · পেন্ডিং রিকোয়েস্ট '+s.pd+'</div>'}
+function photoUp(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var s=Math.min(1,240/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);S.photo=c.toDataURL('image/jpeg',.8);persist();toast('ছবি সেভ হয়েছে');msum();go('acc')};im.src=r.result};r.readAsDataURL(f)}
+setInterval(function(){msum();var a=$('#asum');if(a){a.innerHTML=sumHtml(sum());var g=$('#apg');if(g)g.style.width=Math.min(100,sum().c/CFG.pk[S.pk].lim*100)+'%'}},2000);
+var V={home:home,task:task,promo:promo,pack:pack,rank:rank,ref:ref,acc:acc,about:about,support:support};
+function go(n){page=n;clearInterval(sl);$('#view').innerHTML=V[n]();$('#menu').classList.remove('on');
+ document.querySelectorAll('nav.tab button').forEach(function(b){b.classList.toggle('on',b.dataset.go===n)});window.scrollTo(0,0);bind(n)}
+function copy(t){try{navigator.clipboard.writeText(t).then(function(){toast('কপি হয়েছে')},function(){toast('কপি করা যায়নি, হাতে লিখে নিন')})}catch(e){toast('কপি করা যায়নি, হাতে লিখে নিন')}}
+function bind(n){
+ document.querySelectorAll('#view [data-go]').forEach(function(b){b.onclick=function(){go(b.dataset.go)}});
+ document.querySelectorAll('[data-tk]').forEach(function(b){b.onclick=function(){startTask(b.dataset.tk)}});
+ if(n==='home'){draw();$('#sp').onclick=spin;
+  document.querySelectorAll('[data-bn]').forEach(function(b){b.onclick=function(){var k=b.dataset.bn,v=k==='vip'?CFG.vip:CFG.bn.filter(function(y){return y.k===k})[0];S.last[k]=Date.now();add(v.v);toast('৳'+v.v+' বোনাস পেয়েছেন');go('home')}});
+  var sls=document.querySelectorAll('.sl'),ds=document.querySelectorAll('#dts i'),ix=0;sl=setInterval(function(){sls[ix].classList.remove('on');ds[ix].classList.remove('on');ix=(ix+1)%sls.length;sls[ix].classList.add('on');ds[ix].classList.add('on')},4000)}
+ if(n==='task')document.querySelectorAll('[data-tt]').forEach(function(b){b.onclick=function(){tt=b.dataset.tt;go('task')}});
+ if(n==='rank')document.querySelectorAll('[data-rt]').forEach(function(b){b.onclick=function(){rt=b.dataset.rt;go('rank')}});
+ if(n==='ref'){$('#cc').onclick=function(){copy(S.code)};$('#cl').onclick=function(){copy('https://earnhub.example/r/'+S.code)};
+  $('#rs').onclick=function(){var nm=NM[S.refs.length%NM.length];S.refs.push(nm);add(CFG.refSignup);toast('নতুন বন্ধু! ৳'+CFG.refSignup+' বোনাস');go('ref')}}
+ if(n==='pack')document.querySelectorAll('[data-pk]').forEach(function(b){b.onclick=function(){var i=+b.dataset.pk,p=CFG.pk[i];if(S.bal<p.pr){toast('ব্যালেন্স কম, আগে ডিপোজিট করুন');go('acc');return}S.bal-=p.pr;S.pk=i;persist();head();toast(p.n+' প্যাকেজ চালু হয়েছে');go('pack')}});
+ if(n==='support')$('#ss').onclick=function(){toast('মেসেজ পাঠানো হয়েছে');$('#sm').value=''};
+ if(n==='acc'){
+  $('#pf').onchange=photoUp;document.querySelectorAll('[data-wt]').forEach(function(b){b.onclick=function(){wt=b.dataset.wt;go('acc')}});
+  document.querySelectorAll('[data-pm]').forEach(function(b){b.onclick=function(){pm=b.dataset.pm;go('acc')}});
+  document.querySelectorAll('[data-ap]').forEach(function(b){b.onclick=function(){S.deps.forEach(function(d){if(d.id==+b.dataset.ap&&d.st!=='Approved'){d.st='Approved';S.bal+=d.a}});persist();head();toast('ব্যালেন্স যোগ হয়েছে');go('acc')}});
+  $('#wb').onclick=function(){var a=+$('#wa').value,x=$('#wx').value.trim(),e=$('#we');
+   if(wt==='dep'){if(!(a>=50)){e.textContent='কমপক্ষে ৳৫০ দিন।';return}if(x.length<6){e.textContent='সঠিক Transaction ID দিন।';return}S.deps.push({id:Date.now(),a:a,m:pm,x:x,st:'Pending'});F.unshift(fitem('আপনি','ডিপোজিট',a));toast('ডিপোজিট রিকোয়েস্ট পাঠানো হয়েছে')}
+   else{if(!/^01\d{9}$/.test(x)){e.textContent='সঠিক নাম্বার দিন (01XXXXXXXXX)।';return}if(!(a>=200)){e.textContent='কমপক্ষে ৳২০০ উইথড্র করা যাবে।';return}if(a>S.bal){e.textContent='ব্যালেন্সের বেশি উইথড্র করা যাবে না।';return}S.bal-=a;S.wd.push({id:Date.now(),a:a,m:pm,x:x,st:'Pending'});F.unshift(fitem('আপনি','উইথড্র',a));toast('উইথড্র রিকোয়েস্ট পাঠানো হয়েছে')}
+   persist();head();go('acc')}}}
+document.querySelectorAll('nav.tab [data-go],#menu [data-go]').forEach(function(b){b.onclick=function(){go(b.dataset.go)}});
+$('#dots').onclick=function(){msum();$('#menu').classList.toggle('on')};
+document.addEventListener('click',function(e){if(!e.target.closest('.hr'))$('#menu').classList.remove('on')});
+head();go('home');msum();
+})();
+</script>
+</body>
+</html>
