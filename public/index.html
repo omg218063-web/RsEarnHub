@@ -2,16 +2,178 @@
 <html lang="bn">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>EarnHub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EarnHub – SMM Panel ও Free Income</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@600;800&display=swap">
+<style>
+:root{--bg:#0a0b1e;--bg2:#12143a;--card:rgba(255,255,255,.06);--line:rgba(255,255,255,.12);--tx:#eef0ff;--mut:#9aa0cf;--cy:#2de2e6;--mg:#ff3d9a;--gd:#ffc93c;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;background:radial-gradient(900px 500px at 80% -10%,#3a1a6e55,transparent),radial-gradient(700px 500px at -10% 30%,#0b5a7a44,transparent),var(--bg);color:var(--tx);font-family:"Hind Siliguri",system-ui,sans-serif;line-height:1.6;min-height:100vh}
+h1,h2,h3{font-family:Sora,"Hind Siliguri",sans-serif;margin:0;line-height:1.2}
+.wrap{max-width:1000px;margin:0 auto;padding:0 18px}
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+.logo{font-family:Sora,sans-serif;font-weight:800;font-size:22px}
+.logo b{color:var(--cy)}
+.btn{border:0;cursor:pointer;font:600 16px "Hind Siliguri",sans-serif;color:#06112a;padding:13px 28px;border-radius:14px;background:linear-gradient(180deg,#6ff3f5,var(--cy));box-shadow:0 6px 0 #138a90,0 12px 24px #2de2e644;transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(5px);box-shadow:0 1px 0 #138a90}
+.btn.mg{color:#fff;background:linear-gradient(180deg,#ff72b8,var(--mg));box-shadow:0 6px 0 #a3185f,0 12px 24px #ff3d9a44}
+.btn.mg:active{box-shadow:0 1px 0 #a3185f}
+.btn.ghost{background:var(--card);color:var(--tx);box-shadow:0 5px 0 #0006;border:1px solid var(--line)}
+.btn.sm{padding:8px 18px;font-size:14px;border-radius:11px}
+:focus-visible{outline:3px solid var(--gd);outline-offset:2px}
+.hero{text-align:center;padding:30px 0 50px;position:relative}
+.hero h1{font-size:clamp(30px,6vw,54px);font-weight:800;max-width:720px;margin:0 auto 14px}
+.hero p{color:var(--mut);max-width:540px;margin:0 auto 28px;font-size:18px}
+.stage{height:190px;position:relative;margin:0 auto 24px;perspective:700px}
+.coin{position:absolute;left:50%;top:50%;width:86px;height:86px;margin:-43px;border-radius:50%;display:grid;place-items:center;font:800 34px Sora,sans-serif;color:#7a4a00;background:radial-gradient(circle at 32% 28%,#fff3b0,var(--gd) 55%,#c98a00);box-shadow:0 0 0 6px #e0a90066,0 0 50px #ffc93c88;animation:spin 6s linear infinite}
+.coin.a{transform:translate(-110px,20px) scale(.7);animation-delay:-2s}
+.coin.b{transform:translate(110px,10px) scale(.6);animation-delay:-4s}
+@keyframes spin{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
+.coin.a,.coin.b{animation-name:spin2}
+@keyframes spin2{from{transform:translate(var(--x),var(--y)) scale(.7) rotateY(0)}to{transform:translate(var(--x),var(--y)) scale(.7) rotateY(360deg)}}
+.coin.a{--x:-120px;--y:25px}.coin.b{--x:120px;--y:15px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:46px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 8px;text-align:center}
+.stat b{display:block;font:800 24px Sora,sans-serif;color:var(--cy)}
+.stat span{font-size:14px;color:var(--mut)}
+h2{font-size:26px;margin-bottom:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:46px}
+.panel{border-radius:22px;padding:22px;border:1px solid var(--line);background:linear-gradient(160deg,var(--bg2),#0d0f2b);box-shadow:0 10px 0 #0005,0 20px 40px #0006}
+.panel h3{font-size:21px;margin-bottom:8px}
+.panel p,.panel li{color:var(--mut);font-size:16px;margin:0}
+.panel ul{padding-left:18px;margin:10px 0 0}
+.panel.s{border-top:4px solid var(--cy)}.panel.f{border-top:4px solid var(--mg)}
+.about{margin-bottom:46px;color:var(--mut);font-size:17px}
+footer{text-align:center;color:var(--mut);font-size:14px;padding:24px 0 36px;border-top:1px solid var(--line)}
+/* modal */
+.ov{position:fixed;inset:0;background:#020312cc;display:none;align-items:flex-end;justify-content:center;z-index:20;padding:0}
+.ov.on{display:flex}
+.box{width:100%;max-width:460px;max-height:94vh;overflow:auto;background:linear-gradient(170deg,#181b4a,#0d0f2b);border:1px solid var(--line);border-radius:26px 26px 0 0;padding:22px 20px calc(24px + env(safe-area-inset-bottom,0px));animation:up .3s ease-out}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@media(min-width:600px){.ov{align-items:center}.box{border-radius:26px}}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.x{background:none;border:0;color:var(--mut);font-size:28px;cursor:pointer;line-height:1}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:#00000044;border-radius:14px;padding:4px;margin-bottom:14px}
+.tabs button{border:0;background:none;color:var(--mut);font:600 16px "Hind Siliguri",sans-serif;padding:9px;border-radius:11px;cursor:pointer}
+.tabs button.on{background:var(--card);color:var(--tx)}
+.types{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.type{border:2px solid var(--line);background:var(--card);color:var(--tx);border-radius:16px;padding:12px 8px;cursor:pointer;font:600 15px "Hind Siliguri",sans-serif;text-align:center}
+.type small{display:block;color:var(--mut);font-weight:400;font-size:13px}
+.type.on{border-color:var(--cy);box-shadow:0 0 22px #2de2e655}
+.type.on.f{border-color:var(--mg);box-shadow:0 0 22px #ff3d9a55}
+label{display:block;font-size:14px;color:var(--mut);margin:10px 0 4px}
+input[type=text],input[type=tel],input[type=password]{width:100%;padding:13px 14px;border-radius:13px;border:1px solid var(--line);background:#00000040;color:var(--tx);font:16px "Hind Siliguri",sans-serif}
+.chk{display:flex;gap:8px;align-items:center;margin:12px 0;color:var(--mut);font-size:15px}
+.chk input{width:18px;height:18px;accent-color:var(--cy)}
+.full{width:100%}
+.or{text-align:center;color:var(--mut);font-size:14px;margin:12px 0}
+.err{color:#ff8aa8;font-size:14px;min-height:20px;margin-top:6px}
+.g{display:flex;gap:10px;align-items:center;justify-content:center}
+.g svg{width:20px;height:20px}
+.dash{text-align:center;padding:50px 0}
+.dash .badge{display:inline-block;padding:5px 16px;border-radius:99px;font-weight:600;margin:10px 0 18px;border:1px solid var(--cy);color:var(--cy)}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
 </head>
-<body style="font-family:sans-serif;background:#0a0b1e;color:#fff;text-align:center;padding:60px 20px">
-<h1>EarnHub লাইভ হয়েছে ✅</h1>
-<p id="s">ডাটাবেস চেক করা হচ্ছে...</p>
+<body>
+<div class="wrap" id="landing">
+  <nav><div class="logo">Earn<b>Hub</b></div><button class="btn sm" data-open>লগইন</button></nav>
+  <section class="hero">
+    <div class="stage" aria-hidden="true"><div class="coin a">৳</div><div class="coin">৳</div><div class="coin b">$</div></div>
+    <h1>সোশ্যাল গ্রোথ কিনুন, অথবা টাস্ক করে ইনকাম করুন</h1>
+    <p>একটা অ্যাকাউন্টেই দুইটা সিস্টেম: SMM Panel আর Free Income। বিকাশ ও নগদে সহজ ডিপোজিট।</p>
+    <button class="btn mg" data-open style="font-size:19px;padding:16px 44px">Get Started</button>
+  </section>
+  <div class="stats">
+    <div class="stat"><b>১২০+</b><span>সক্রিয় টাস্ক</span></div>
+    <div class="stat"><b>৫,০০০+</b><span>ইউজার</span></div>
+    <div class="stat"><b>৳২৫ লক্ষ+</b><span>পেমেন্ট</span></div>
+    <div class="stat"><b>২৪/৭</b><span>সাপোর্ট</span></div>
+  </div>
+  <h2>দুইটা সিস্টেম, এক জায়গায়</h2>
+  <div class="two">
+    <div class="panel s"><h3>SMM Panel</h3><p>YouTube, TikTok, Instagram ও Facebook-এর জন্য ফলোয়ার, লাইক ও সাবস্ক্রাইব অর্ডার করুন।</p><ul><li>সব দাম ডলারে</li><li>কাস্টম অর্ডার সুবিধা</li><li>বিকাশ/নগদে ফান্ড যোগ</li></ul></div>
+    <div class="panel f"><h3>Free Income</h3><p>প্রতিদিন টাস্ক করুন, বোনাস ও লাকি স্পিন জিতুন।</p><ul><li>Ad ও ভিডিও টাস্ক</li><li>ডেইলি, উইকলি, মান্থলি বোনাস</li><li>প্যাকেজ, র‍্যাংকিং ও প্রমোশন</li></ul></div>
+  </div>
+  <h2>আমাদের সম্পর্কে</h2>
+  <p class="about">EarnHub একটা টাস্ক-ভিত্তিক প্ল্যাটফর্ম। এখানে ব্যবসা ও কনটেন্ট ক্রিয়েটররা সোশ্যাল সার্ভিস কিনতে পারেন, আর সাধারণ ইউজাররা ছোট ছোট কাজ করে আয় করতে পারেন। (এই লেখা ডেমো, পরে আপনার কোম্পানির তথ্য বসানো হবে।)</p>
+  <footer>© EarnHub · ডেমো ডিজাইন</footer>
+</div>
+
+<div class="wrap dash" id="dash" hidden>
+  <div class="logo">Earn<b>Hub</b></div>
+  <div class="badge" id="dtype"></div>
+  <h1 id="dname" style="font-size:30px"></h1>
+  <p style="color:var(--mut);max-width:420px;margin:12px auto 24px">লগইন সফল হয়েছে। এই ইউজার পরের বার পাসওয়ার্ড ছাড়াই ঢুকবে। নিচের বাটনে আপনার ড্যাশবোর্ডে যান।</p>
+  <a class="btn" id="dgo" href="smm.html" style="text-decoration:none;display:inline-block;margin-right:10px">ড্যাশবোর্ডে যান</a><button class="btn ghost" id="logout">লগআউট</button>
+</div>
+
+<div class="ov" id="ov" role="dialog" aria-modal="true" aria-label="লগইন ও রেজিস্ট্রেশন">
+  <div class="box">
+    <div class="top"><h2 id="mt" style="margin:0;font-size:22px">অ্যাকাউন্ট খুলুন</h2><button class="x" id="cl" aria-label="বন্ধ করুন">×</button></div>
+    <div class="tabs"><button class="on" data-tab="reg">রেজিস্ট্রেশন</button><button data-tab="log">লগইন</button></div>
+    <div id="typeBox">
+      <div class="types">
+        <button class="type on" data-type="SMM Panel">SMM Panel<small>ফলোয়ার ও লাইক কিনুন</small></button>
+        <button class="type f" data-type="Free Income">Free Income<small>টাস্ক করে ইনকাম</small></button>
+      </div>
+    </div>
+    <button class="btn ghost full g" id="gg"><svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 010-9.4l-7.9-6.1a24 24 0 000 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>Google দিয়ে চালিয়ে যান</button>
+    <div class="or">অথবা</div>
+    <div id="regOnly">
+      <label for="ph">ফোন নাম্বার</label><input id="ph" type="tel" inputmode="tel" placeholder="01XXXXXXXXX" autocomplete="tel">
+    </div>
+    <label for="un">ইউজারনেম</label><input id="un" type="text" autocomplete="username" placeholder="যেমন: rahim99">
+    <label for="pw">পাসওয়ার্ড</label><input id="pw" type="password" autocomplete="current-password" placeholder="কমপক্ষে ৬ অক্ষর">
+    <label class="chk"><input type="checkbox" id="rm" checked> পাসওয়ার্ড সেভ করুন, পরের বার অটো লগইন</label>
+    <div class="err" id="er" role="alert"></div>
+    <button class="btn full" id="go">রেজিস্ট্রেশন করুন</button>
+  </div>
+</div>
+
 <script>
-fetch('/health').then(r=>r.json()).then(d=>{
-  document.getElementById('s').textContent='ডাটাবেস: '+d.db;
-}).catch(()=>{document.getElementById('s').textContent='সার্ভার সাড়া দিচ্ছে না'});
+(function(){
+  var $=function(s){return document.querySelector(s)},$$=function(s){return document.querySelectorAll(s)};
+  var mode='reg',type='SMM Panel';
+  function load(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}}
+  function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+  function del(k){try{localStorage.removeItem(k)}catch(e){}}
+  function showDash(u){$('#landing').hidden=true;$('#dash').hidden=false;$('#dtype').textContent=u.type;$('#dname').textContent='স্বাগতম, '+u.name;$('#dgo').href=u.type==='Free Income'?'free.html':'smm.html';$('#ov').classList.remove('on')}
+  function open_(){$('#ov').classList.add('on');$('#er').textContent=''}
+  function setMode(m){mode=m;$$('.tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.tab===m)});
+    $('#regOnly').hidden=m!=='reg';$('#typeBox').hidden=m!=='reg';
+    $('#go').textContent=m==='reg'?'রেজিস্ট্রেশন করুন':'লগইন করুন';
+    $('#mt').textContent=m==='reg'?'অ্যাকাউন্ট খুলুন':'আবার স্বাগতম'}
+  $$('[data-open]').forEach(function(b){b.onclick=open_});
+  $('#cl').onclick=function(){$('#ov').classList.remove('on')};
+  $('#ov').onclick=function(e){if(e.target===this)this.classList.remove('on')};
+  $$('.tabs button').forEach(function(b){b.onclick=function(){setMode(b.dataset.tab)}});
+  $$('.type').forEach(function(b){b.onclick=function(){type=b.dataset.type;$$('.type').forEach(function(x){x.classList.toggle('on',x===b)})}});
+  $('#gg').onclick=function(){var u={name:'Google ইউজার',type:type,via:'google'};save('eh_users_g',u);if($('#rm').checked)save('eh_session',u);showDash(u)};
+  $('#go').onclick=function(){
+    var un=$('#un').value.trim(),pw=$('#pw').value,ph=$('#ph').value.trim(),er=$('#er');
+    var users=load('eh_users')||{};
+    if(!un){er.textContent='ইউজারনেম লিখুন।';return}
+    if(pw.length<6){er.textContent='পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।';return}
+    if(mode==='reg'){
+      if(!/^01\d{9}$/.test(ph)){er.textContent='সঠিক ১১ সংখ্যার ফোন নাম্বার দিন (01XXXXXXXXX)।';return}
+      if(users[un]){er.textContent='এই ইউজারনেম আগেই নেওয়া হয়েছে। অন্য নাম দিন।';return}
+      users[un]={pw:pw,phone:ph,type:type};save('eh_users',users);
+    }else{
+      if(!users[un]||users[un].pw!==pw){er.textContent='ইউজারনেম বা পাসওয়ার্ড মিলছে না। আবার চেষ্টা করুন।';return}
+    }
+    var u={name:un,type:users[un].type};
+    if($('#rm').checked)save('eh_session',u);else del('eh_session');
+    showDash(u);
+  };
+  $('#logout').onclick=function(){del('eh_session');$('#dash').hidden=true;$('#landing').hidden=false;setMode('log')};
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')$('#ov').classList.remove('on')});
+  var s=load('eh_session');if(s)showDash(s);
+  setMode('reg');
+})();
 </script>
 </body>
 </html>
