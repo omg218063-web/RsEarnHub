@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EarnHub</title>
+</head>
+<body style="font-family:sans-serif;background:#0a0b1e;color:#fff;text-align:center;padding:60px 20px">
+<h1>EarnHub লাইভ হয়েছে ✅</h1>
+<p id="s">ডাটাবেস চেক করা হচ্ছে...</p>
+<script>
+fetch('/health').then(r=>r.json()).then(d=>{
+  document.getElementById('s').textContent='ডাটাবেস: '+d.db;
+}).catch(()=>{document.getElementById('s').textContent='সার্ভার সাড়া দিচ্ছে না'});
+</script>
+</body>
+</html>
