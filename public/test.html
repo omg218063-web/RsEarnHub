@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EarnHub সংযোগ পরীক্ষা</title>
+<style>
+[hidden]{display:none!important}
+body{font-family:system-ui,"Noto Sans Bengali",sans-serif;background:#0a0b1e;color:#eef0ff;margin:0;padding:16px;max-width:520px;margin:0 auto}
+h2{margin:8px 0}.m{color:#9aa0cf;font-size:14px}
+.c{background:#12143a;border:1px solid #2b2f6a;border-radius:16px;padding:14px;margin:12px 0}
+input,select{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #3a3f80;background:#0a0c2e;color:#eef0ff;font-size:16px;box-sizing:border-box}
+button{padding:12px 16px;border:0;border-radius:10px;background:#2de2e6;color:#06112a;font-size:16px;font-weight:700;margin:4px 4px 0 0}
+button.g{background:#2b2f6a;color:#eef0ff}
+.b{font-size:28px;font-weight:800;color:#ffc93c}
+.h{border-bottom:1px solid #2b2f6a;padding:8px 0;font-size:14px}
+#msg{min-height:22px;margin:8px 0;font-weight:600}
+</style>
+</head>
+<body>
+<h2>EarnHub সংযোগ পরীক্ষা</h2>
+<p class="m">এটা শুধু পরীক্ষার পেজ। পরীক্ষা শেষে ফাইলটা মুছে দেবেন।</p>
+<div id="msg"></div>
+
+<div id="auth" class="c">
+  <select id="site"><option value="free">Free Income (টাকা)</option><option value="smm">SMM Panel (ডলার)</option></select>
+  <input id="un" placeholder="ইউজারনেম (ইংরেজি, যেমন test01)" autocapitalize="none">
+  <input id="ph" placeholder="ফোন 01XXXXXXXXX" inputmode="numeric">
+  <input id="pw" type="password" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)">
+  <button id="reg">রেজিস্ট্রেশন</button><button id="log" class="g">লগইন</button>
+</div>
+
+<div id="app" hidden>
+  <div class="c"><div class="m" id="who"></div><div class="b" id="bal"></div><button id="out" class="g">লগআউট</button></div>
+
+  <div class="c"><b>ডিপোজিট রিকোয়েস্ট</b>
+    <input id="da" type="number" placeholder="পরিমাণ (Free: ৳200 দিন)" inputmode="decimal">
+    <select id="dm"><option>bKash</option><option>Nagad</option></select>
+    <input id="dx" placeholder="Transaction ID (কমপক্ষে ৬ অক্ষর)">
+    <button id="dep">ডিপোজিট পাঠান</button>
+  </div>
+
+  <div class="c" id="wdbox"><b>উইথড্র রিকোয়েস্ট (শুধু Free Income)</b>
+    <input id="wa" type="number" placeholder="পরিমাণ (কমপক্ষে ৳200)" inputmode="decimal">
+    <select id="wm"><option>bKash</option><option>Nagad</option></select>
+    <input id="wn" placeholder="নাম্বার 01XXXXXXXXX" inputmode="numeric">
+    <button id="wd">উইথড্র পাঠান</button>
+  </div>
+
+  <div class="c"><b>হিস্টোরি (৫ সেকেন্ডে নিজে নিজে আপডেট হয়)</b><div id="his"></div></div>
+</div>
+
+<script>
+var $ = function (s) { return document.querySelector(s); };
+function msg(t, bad) { var e = $('#msg'); e.textContent = t; e.style.color = bad ? '#ff8aa8' : '#4be38a'; }
+async function api(p, b) {
+  var r = await fetch(p, { method: b ? 'POST' : 'GET', headers: { 'Content-Type': 'application/json' }, body: b ? JSON.stringify(b) : undefined, credentials: 'same-origin' });
+  var d = {};
+  try { d = await r.json(); } catch (e) {}
+  if (!r.ok || d.ok === false) throw new Error(d.msg || ('সমস্যা হয়েছে (' + r.status + ')'));
+  return d;
+}
+var ST = { pending: '⏳ ওয়ালেটে অ্যাপ্রুভের অপেক্ষা', approved: '✅ গৃহীত', rejected: '❌ বাতিল' };
+function show(u) {
+  $('#auth').hidden = true; $('#app').hidden = false;
+  $('#who').textContent = u.username + ' · ' + (u.site === 'smm' ? 'SMM Panel' : 'Free Income');
+  $('#bal').textContent = (u.site === 'smm' ? '$' : '৳') + u.balance;
+  $('#wdbox').hidden = u.site !== 'free';
+}
+async function refresh() {
+  try {
+    var m = await api('/api/me');
+    show(m.user);
+    var r = await api('/api/requests');
+    $('#his').innerHTML = r.items.length ? r.items.map(function (x) {
+      return '<div class="h"><b>' + (x.type === 'deposit' ? 'ডিপোজিট' : 'উইথড্র') + ' ' + x.amount + '</b> · ' + x.method + ' · ' + x.reference + '<br>' + (ST[x.status] || x.status) + '</div>';
+    }).join('') : '<div class="m">কিছু নেই</div>';
+  } catch (e) { $('#auth').hidden = false; $('#app').hidden = true; }
+}
+$('#reg').onclick = async function () {
+  try {
+    await api('/api/register', { username: $('#un').value, phone: $('#ph').value, password: $('#pw').value, site: $('#site').value });
+    msg('রেজিস্ট্রেশন সফল', false); refresh();
+  } catch (e) { msg(e.message, true); }
+};
+$('#log').onclick = async function () {
+  try { await api('/api/login', { username: $('#un').value, password: $('#pw').value }); msg('লগইন সফল', false); refresh(); }
+  catch (e) { msg(e.message, true); }
+};
+$('#out').onclick = async function () { await api('/api/logout', {}); $('#app').hidden = true; $('#auth').hidden = false; msg('লগআউট হয়েছে', false); };
+$('#dx').value = 'TEST' + Math.random().toString(36).slice(2, 8).toUpperCase();
+$('#dep').onclick = async function () {
+  try {
+    await api('/api/deposit', { amount: $('#da').value, method: $('#dm').value, trx: $('#dx').value });
+    msg('ডিপোজিট পাঠানো হয়েছে। এখন ওয়ালেটে গিয়ে অ্যাপ্রুভ করুন।', false);
+    $('#dx').value = 'TEST' + Math.random().toString(36).slice(2, 8).toUpperCase();
+    refresh();
+  } catch (e) { msg(e.message, true); }
+};
+$('#wd').onclick = async function () {
+  try {
+    await api('/api/withdraw', { amount: $('#wa').value, method: $('#wm').value, account: $('#wn').value });
+    msg('উইথড্র পাঠানো হয়েছে। এখন ওয়ালেটে গিয়ে দেখুন।', false); refresh();
+  } catch (e) { msg(e.message, true); }
+};
+refresh();
+setInterval(function () { if (!$('#app').hidden) refresh(); }, 5000);
+</script>
+</body>
+  </html>
