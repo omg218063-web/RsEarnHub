@@ -13,9 +13,10 @@ app.use(express.json({ limit: '10kb', verify: (req, res, buf) => { req.rawBody =
 const PORT = process.env.PORT || 3000;
 const pub = path.join(__dirname, 'public');
 const USD_RATE = Number(process.env.USD_RATE) || 125;
-const WALLET_URL = (process.env.WALLET_API_URL || '').replace(/\/$/, '');
-const WALLET_KEY = process.env.WALLET_API_KEY || '';
-const WALLET_SECRET = process.env.WALLET_WEBHOOK_SECRET || '';
+// ওয়ালেটের ঠিকানা: শেষের ফাঁকা জায়গা, / বা /api থাকলে নিজেই ঠিক করে নেয়
+const WALLET_URL = (process.env.WALLET_API_URL || '').trim().replace(/\/+$/, '').replace(/\/api$/, '');
+const WALLET_KEY = (process.env.WALLET_API_KEY || '').trim();
+const WALLET_SECRET = (process.env.WALLET_WEBHOOK_SECRET || '').trim();
 
 // ================= MongoDB =================
 let dbState = 'not configured';
@@ -49,6 +50,8 @@ const reqSchema = new mongoose.Schema({
   reference: String,     // deposit: Transaction ID, withdraw: account number
   status: { type: String, default: 'pending', index: true },
   walletSent: { type: Boolean, default: false },
+  walletError: String,
+  walletTries: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
   doneAt: Date
 });
@@ -197,8 +200,12 @@ app.post('/api/logout', (req, res) => {
 app.get('/api/me', needDb, auth, (req, res) => res.json({ ok: true, user: publicUser(req.user) }));
 
 // ================= Wallet: send requests out =================
-async function sendToWallet(r) {
-  if (!WALLET_URL || !WALLET_KEY) return false;
+async function sendToWallet(r, timeoutMs) {
+  if (!WALLET_URL || !WALLET_KEY) {
+    r.walletError = 'WALLET_API_URL বা WALLET_API_KEY সেট করা নেই';
+    try { await r.save(); } catch (e) {}
+    return false;
+  }
   try {
     const resp = await fetch(WALLET_URL + '/api/requests', {
       method: 'POST',
@@ -213,21 +220,68 @@ async function sendToWallet(r) {
         amountBdt: r.amountBdt,
         method: r.method,
         reference: r.reference
-      })
+      }),
+      signal: AbortSignal.timeout(timeoutMs || 40000)
     });
-    if (resp.ok) { r.walletSent = true; await r.save(); return true; }
-    console.error('wallet responded ' + resp.status);
-  } catch (e) { console.error('wallet send failed: ' + e.message); }
+    if (resp.ok) {
+      r.walletSent = true;
+      r.walletError = undefined;
+      await r.save();
+      console.log('[wallet] ' + r.type + ' ' + r._id + ' -> পাঠানো হয়েছে');
+      return true;
+    }
+    r.walletError = 'ওয়ালেট উত্তর দিয়েছে HTTP ' + resp.status;
+  } catch (e) {
+    r.walletError = 'সংযোগ হয়নি: ' + e.message;
+  }
+  r.walletTries = (r.walletTries || 0) + 1;
+  console.error('[wallet] ' + r.type + ' ' + r._id + ' -> ' + r.walletError);
+  try { await r.save(); } catch (e) {}
   return false;
 }
-// retry anything the wallet has not received yet
+
+// ওয়ালেটে যেগুলো পৌঁছায়নি, প্রতি মিনিটে আবার পাঠানোর চেষ্টা
+let retrying = false;
 setInterval(async () => {
-  if (mongoose.connection.readyState !== 1) return;
+  if (retrying || mongoose.connection.readyState !== 1) return;
+  retrying = true;
   try {
     const list = await Req.find({ walletSent: false, status: 'pending' }).limit(20);
-    for (const r of list) await sendToWallet(r);
+    for (const r of list) await sendToWallet(r, 40000);
   } catch (e) { console.error('retry error: ' + e.message); }
+  retrying = false;
 }, 60000);
+
+// সংযোগ ঠিক আছে কিনা দেখার লিংক (কোনো গোপন তথ্য দেখায় না)
+app.get('/api/wallet-check', limit(6, 60000), ah(async (req, res) => {
+  const out = { db: dbState, urlSet: !!WALLET_URL, keySet: !!WALLET_KEY, secretSet: !!WALLET_SECRET };
+  try { out.walletHost = new URL(WALLET_URL).host; } catch (e) { out.walletHost = 'ঠিকানা নেই বা ভুল'; }
+  if (mongoose.connection.readyState === 1) {
+    out.unsent = await Req.countDocuments({ walletSent: false, status: 'pending' });
+    const recent = await Req.find().sort({ createdAt: -1 }).limit(8);
+    out.recent = recent.map((r) => ({
+      type: r.type, status: r.status, walletSent: r.walletSent, tries: r.walletTries || 0,
+      error: r.walletError || null, minutesAgo: Math.round((Date.now() - r.createdAt) / 60000)
+    }));
+  }
+  if (WALLET_URL) {
+    try {
+      const p = await fetch(WALLET_URL + '/api/requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': WALLET_KEY },
+        body: '{}',
+        signal: AbortSignal.timeout(40000)
+      });
+      out.walletProbe = p.status;
+      out.meaning = ({
+        400: 'ঠিক আছে: ঠিকানা ও কী দুটোই মিলেছে',
+        401: 'কী মেলেনি: দুই জায়গার কী হুবহু এক করুন',
+        404: 'ওয়ালেটে earnhub.js লোড হয়নি বা ঠিকানা ভুল'
+      })[p.status] || 'অন্য উত্তর';
+    } catch (e) { out.walletProbe = 'সংযোগ হয়নি: ' + e.message; }
+  }
+  res.json(out);
+}));
 
 app.post('/api/deposit', needDb, auth, limit(10, 60000), ah(async (req, res) => {
   const { amount, method, trx } = req.body || {};
@@ -248,8 +302,8 @@ app.post('/api/deposit', needDb, auth, limit(10, 60000), ah(async (req, res) => 
     if (e.code === 11000) return res.status(409).json({ ok: false, msg: 'এই Transaction ID আগেই ব্যবহার হয়েছে।' });
     throw e;
   }
-  sendToWallet(r);
-  res.json({ ok: true, id: r._id, status: r.status });
+  const sent = await sendToWallet(r, 8000);
+  res.json({ ok: true, id: r._id, status: r.status, walletSent: sent });
 }));
 
 app.post('/api/withdraw', needDb, auth, limit(10, 60000), ah(async (req, res) => {
@@ -271,13 +325,13 @@ app.post('/api/withdraw', needDb, auth, limit(10, 60000), ah(async (req, res) =>
     });
   } finally { session.endSession(); }
   if (!doc) return res.status(400).json({ ok: false, msg: 'ব্যালেন্স যথেষ্ট নয়।' });
-  sendToWallet(doc);
-  res.json({ ok: true, id: doc._id, status: doc.status });
+  const sent = await sendToWallet(doc, 8000);
+  res.json({ ok: true, id: doc._id, status: doc.status, walletSent: sent });
 }));
 
 app.get('/api/requests', needDb, auth, ah(async (req, res) => {
   const list = await Req.find({ user: req.user._id }).sort({ createdAt: -1 }).limit(50);
-  res.json({ ok: true, items: list.map((r) => ({ id: r._id, type: r.type, amount: r.amount, method: r.method, reference: r.reference, status: r.status, createdAt: r.createdAt })) });
+  res.json({ ok: true, items: list.map((r) => ({ id: r._id, type: r.type, amount: r.amount, method: r.method, reference: r.reference, status: (r.status === 'pending' && !r.walletSent) ? '⚠️ ওয়ালেটে এখনো পৌঁছায়নি, আবার চেষ্টা চলছে' : r.status, error: r.walletError || null, createdAt: r.createdAt })) });
 }));
 
 // live feed: only wallet-approved transactions, names masked
