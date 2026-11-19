@@ -731,7 +731,7 @@ app.post('/api/wallet/webhook', needDb, ah(async (req, res) => {
   } finally { session.endSession(); }
   res.json({ ok: true, result });
 }));
-
+require('./admin-api')(app, { mongoose, User, Ledger, Order, Custom, Support, Config, getCfg, validAdminToken, getCookie, ah, needDb });
 // ================= পেজ =================
 function page(name, inject) {
   return (req, res) => {
