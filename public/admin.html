@@ -8,153 +8,227 @@
 <style>
 :root{--bg:#0a0b1e;--bg2:#12143a;--card:rgba(255,255,255,.06);--line:rgba(255,255,255,.12);--tx:#eef0ff;--mut:#9aa0cf;--cy:#2de2e6;--mg:#ff3d9a;--gd:#ffc93c;--ok:#4be38a;--rd:#ff6b8a;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *,*:before,*:after{box-sizing:inherit}
-body{margin:0;background:radial-gradient(800px 460px at 90% -10%,#1a3a8e44,transparent),var(--bg);color:var(--tx);font-family:"Hind Siliguri",system-ui,sans-serif;line-height:1.5;min-height:100vh}
+body{margin:0;background:radial-gradient(800px 460px at 90% -10%,#1a3a8e44,transparent),var(--bg);color:var(--tx);font-family:"Hind Siliguri",system-ui,sans-serif;line-height:1.5;min-height:100vh;padding-bottom:90px}
 h1,h2,h3{font-family:Sora,"Hind Siliguri",sans-serif;margin:0}
-.app{max-width:760px;margin:0 auto;padding:0 14px 40px}
+.app{max-width:760px;margin:0 auto;padding:0 14px}
 header{display:flex;justify-content:space-between;align-items:center;padding:14px 0 8px}
 .logo{font:800 20px Sora,sans-serif}.logo b{color:var(--cy)}
-.who{font-size:13px;color:var(--mut)}
 .nav{display:flex;gap:8px;overflow-x:auto;padding:6px 0 12px;position:sticky;top:env(safe-area-inset-top,0px);background:linear-gradient(var(--bg) 80%,transparent);z-index:5;scrollbar-width:none}
 .nav::-webkit-scrollbar{display:none}
 .nav button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--mut);font:600 15px "Hind Siliguri",sans-serif;padding:8px 14px;border-radius:12px;cursor:pointer;white-space:nowrap}
 .nav button.on{background:linear-gradient(180deg,#6ff3f5,var(--cy));color:#06112a;border-color:transparent;box-shadow:0 3px 0 #138a90}
-.btn{border:0;cursor:pointer;font:600 14px "Hind Siliguri",sans-serif;color:#06112a;padding:7px 14px;border-radius:10px;background:linear-gradient(180deg,#6ff3f5,var(--cy));box-shadow:0 3px 0 #138a90}
+.btn{border:0;cursor:pointer;font:600 14px "Hind Siliguri",sans-serif;color:#06112a;padding:7px 14px;border-radius:10px;background:linear-gradient(180deg,#6ff3f5,var(--cy));box-shadow:0 3px 0 #138a90;text-decoration:none;display:inline-block}
 .btn:active{transform:translateY(2px);box-shadow:0 1px 0 #138a90}
 .btn.ok{background:linear-gradient(180deg,#8ff0b4,var(--ok));box-shadow:0 3px 0 #1a9a52}
 .btn.rd{background:linear-gradient(180deg,#ff9bb0,var(--rd));box-shadow:0 3px 0 #a3283f;color:#2a0510}
 .btn.gh{background:var(--card);color:var(--tx);box-shadow:none;border:1px solid var(--line)}
 :focus-visible{outline:3px solid var(--gd);outline-offset:2px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .mut{color:var(--mut);font-size:13px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.g3{grid-template-columns:repeat(3,1fr)}
-.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
 h3.sec{font-size:17px;margin:18px 0 10px}
 .stat{background:linear-gradient(160deg,var(--bg2),#0d0f2b);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 5px 0 #0005}
 .stat b{display:block;font:800 22px Sora,sans-serif;color:var(--cy)}
 .stat span{font-size:13px;color:var(--mut)}
 label{display:block;font-size:12px;color:var(--mut);margin:8px 0 3px}
 input[type=text],input[type=number],input[type=url],select,textarea{width:100%;padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:#0a0c2e;color:var(--tx);font:15px "Hind Siliguri",sans-serif}
-textarea{min-height:80px;resize:vertical}
 .sw{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--tx);margin:10px 0 0;cursor:pointer}
 .sw input{width:18px;height:18px;accent-color:var(--cy)}
 .badge{padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap}
-.pend{background:#ffc93c22;color:var(--gd)}.done{background:#4be38a22;color:var(--ok)}.bad{background:#ff6b8a22;color:var(--rd)}
+.pend{background:#ffc93c22;color:var(--gd)}.done{background:#4be38a22;color:var(--ok)}.bad{background:#ff6b8a22;color:var(--rd)}.run{background:#2de2e622;color:var(--cy)}
 .s1{background:#2de2e622;color:var(--cy)}.s2{background:#ff3d9a22;color:var(--mg)}
 .sub{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}
 .sub button{flex:none;border:0;background:var(--card);color:var(--mut);font:600 14px "Hind Siliguri",sans-serif;padding:7px 13px;border-radius:99px;cursor:pointer}
 .sub button.on{background:var(--tx);color:#0a0b1e}
-.sw2{width:100%;height:22px;border-radius:8px;margin-top:4px}
-.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ok);color:#04230f;padding:9px 20px;border-radius:99px;font-weight:600;display:none;z-index:30}
-.demo{background:#ffc93c18;border:1px solid #ffc93c55;color:var(--gd);border-radius:12px;padding:8px 12px;font-size:13px;margin-bottom:10px}
+.sw2{width:100%;height:46px;border-radius:10px;display:flex;align-items:center;padding:0 12px;font-weight:700}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ok);color:#04230f;padding:9px 20px;border-radius:99px;font-weight:600;display:none;z-index:30;max-width:92%;text-align:center}
+.toast.er{background:var(--rd);color:#2a0510}
+#savebar{position:fixed;left:0;right:0;bottom:0;background:#0d0f2bf2;border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));display:none;z-index:25}
+#savebar .in{max-width:760px;margin:0 auto;display:flex;gap:10px;align-items:center;justify-content:space-between}
+#savebar .btn{padding:11px 22px;font-size:16px}
+.msg{white-space:pre-wrap;word-break:break-word;margin:6px 0}
 @media(max-width:520px){.g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="logo">Earn<b>Hub</b> অ্যাডমিন</div><div class="who">Super Admin</div></header>
-<div class="demo">ডেমো ডাটা। এখানকার পরিবর্তন শুধু এই ব্রাউজারে থাকে। ব্যাকএন্ড জুড়লে দুই সাইটে সরাসরি কাজ করবে।</div>
+<header><div class="logo">Earn<b>Hub</b> অ্যাডমিন</div><a class="btn gh" href="/">সাইটে যান</a></header>
 <div class="nav" id="nav"></div>
 <main id="view"></main>
 </div>
+<div id="savebar"><div class="in"><span class="mut" id="sbt"></span><button class="btn ok" id="sbb">💾 সেভ করুন</button></div></div>
 <div class="toast" id="toast" role="status"></div>
+
 <script>
 (function(){
 var $=function(s){return document.querySelector(s)};
-function ld(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}}
-function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-var GR=['linear-gradient(135deg,#1a7a96,#16206a)','linear-gradient(135deg,#e8501c,#a31d5c)','linear-gradient(135deg,#6a2cc9,#2b1a7a)','linear-gradient(135deg,#0f8a5a,#164a6a)'],GN=['নীল','কমলা','বেগুনি','সবুজ'];
-var DEF={rate:125,
-users:[{id:1,n:'Rahim_77',ph:'01711000001',s:'free',bal:1450,pk:2,ban:false},{id:2,n:'Sumi Akter',ph:'01811000002',s:'smm',bal:12.5,pk:0,ban:false},{id:3,n:'tanvir.bd',ph:'01911000003',s:'free',bal:320,pk:1,ban:false},{id:4,n:'Nusrat J.',ph:'01611000004',s:'smm',bal:3,pk:0,ban:false},{id:5,n:'Sakib420',ph:'01511000005',s:'free',bal:80,pk:0,ban:true},{id:6,n:'Mim_pro',ph:'01311000006',s:'smm',bal:45,pk:0,ban:false}],
-tx:[{id:1,u:'Sumi Akter',t:'dep',s:'smm',a:10,m:'bKash',x:'8N7A6D5E4C',st:'Pending'},{id:2,u:'Rahim_77',t:'wd',s:'free',a:500,m:'Nagad',x:'01711000001',st:'Pending'},{id:3,u:'tanvir.bd',t:'dep',s:'free',a:1500,m:'bKash',x:'7K2J9H3G1F',st:'Pending'},{id:4,u:'Mim_pro',t:'dep',s:'smm',a:20,m:'Nagad',x:'5B4C3D2E1A',st:'Approved'},{id:5,u:'Nusrat J.',t:'wd',s:'free',a:300,m:'bKash',x:'01611000004',st:'Pending'}],
-ord:[{id:1001,u:'Sumi Akter',pf:'YouTube',sv:'Subscribers',q:1000,c:4.5,st:'Pending'},{id:1002,u:'Mim_pro',pf:'TikTok',sv:'Followers',q:2000,c:5.6,st:'Processing'},{id:1003,u:'Nusrat J.',pf:'Instagram',sv:'Likes',q:500,c:.55,st:'Completed'}],
-smm:[{pf:'YouTube',sv:'Subscribers',p:4.5,on:true},{pf:'YouTube',sv:'Views',p:1.2,on:true},{pf:'TikTok',sv:'Followers',p:2.8,on:true},{pf:'TikTok',sv:'Likes',p:.9,on:true},{pf:'Instagram',sv:'Followers',p:3.2,on:true},{pf:'Facebook',sv:'Page Likes',p:2.2,on:true},{pf:'Telegram',sv:'Channel Members',p:2.2,on:true},{pf:'Twitter / X',sv:'Followers',p:4,on:false}],
-tk:[{t:'ad',n:'স্পনসর বিজ্ঞাপন দেখুন',l:'https://example.com/ad1',on:true},{t:'ad',n:'ব্যানার বিজ্ঞাপন ভিজিট',l:'https://example.com/ad2',on:true},{t:'ad',n:'অ্যাপ প্রমো দেখুন',l:'https://example.com/ad3',on:true},{t:'ad',n:'অফার বিজ্ঞাপন দেখুন',l:'https://example.com/ad4',on:true},{t:'vid',n:'YouTube ভিডিও দেখুন',l:'https://www.youtube.com',on:true},{t:'vid',n:'TikTok ভিডিও দেখুন',l:'https://www.tiktok.com',on:true},{t:'vid',n:'Facebook রিলস দেখুন',l:'https://www.facebook.com',on:true},{t:'vid',n:'Instagram রিলস দেখুন',l:'https://www.instagram.com',on:true}],
-pk:[{n:'Free',pr:0,lim:4,rw:1},{n:'Silver',pr:500,lim:8,rw:4},{n:'Gold',pr:1500,lim:10,rw:12},{n:'Diamond',pr:5000,lim:10,rw:45}],
-bn:[{n:'ডেইলি বোনাস',v:2},{n:'লগইন বোনাস',v:1},{n:'সাপ্তাহিক বোনাস',v:20},{n:'মাসিক বোনাস',v:100},{n:'মাসিক VIP বোনাস',v:500}],
-wv:[5,10,2,20,5,1,10,50,5,2,20,10,1,5,100,2],ww:[14,10,16,3,14,18,10,1,14,16,3,10,18,14,.3,16],
-ref:{su:20,pct:5},
-bnr:[{t:'TechMart BD',d:'সব গ্যাজেটে ২০% ছাড়',c:0,on:true},{t:'FoodieGo',d:'প্রথম অর্ডারে ফ্রি ডেলিভারি',c:1,on:true},{t:'LearnFast',d:'অনলাইন কোর্সে বিশেষ অফার',c:2,on:true}],
-pr:[{n:'TechMart BD',d:'গ্যাজেট স্টোর ভিজিট করুন',l:'https://example.com/techmart',rw:6,on:true},{n:'FoodieGo',d:'অ্যাপ ইনস্টল পেজ দেখুন',l:'https://example.com/foodiego',rw:8,on:true},{n:'PayEasy',d:'ওয়ালেট অফার দেখুন',l:'https://example.com/payeasy',rw:10,on:true}],
-set:{name:'EarnHub',about:'EarnHub একটা টাস্ক-ভিত্তিক প্ল্যাটফর্ম। এখানে ব্যবসা ও ক্রিয়েটররা সোশ্যাল সার্ভিস কিনতে পারেন, আর সাধারণ ইউজাররা ছোট ছোট কাজ করে আয় করতে পারেন।',bk:'01XXX-XXXXXX',ng:'01YYY-YYYYYY',minwd:200,mindep:50,maint:false},
-ab:{land:{h:'সোশ্যাল গ্রোথ কিনুন, অথবা টাস্ক করে ইনকাম করুন',p:'একটা অ্যাকাউন্টেই দুইটা সিস্টেম: SMM Panel আর Free Income।',s:[{v:'১২০+',l:'সক্রিয় টাস্ক'},{v:'৫,০০০+',l:'ইউজার'},{v:'৳২৫ লক্ষ+',l:'পেমেন্ট'},{v:'২৪/৭',l:'সাপোর্ট'}],about:'EarnHub একটা টাস্ক-ভিত্তিক প্ল্যাটফর্ম। এখানে ব্যবসা ও ক্রিয়েটররা সোশ্যাল সার্ভিস কিনতে পারেন, আর সাধারণ ইউজাররা ছোট ছোট কাজ করে আয় করতে পারেন।'},smm:{t:'SMM Panel',d:'YouTube, TikTok, Instagram ও Facebook-এর জন্য ফলোয়ার, লাইক ও সাবস্ক্রাইব অর্ডার করুন।',hero:'সোশ্যাল গ্রোথ, ডলার রেটে'},free:{t:'Free Income',d:'টাস্ক, বোনাস ও স্পিনের মাধ্যমে আয়ের প্ল্যাটফর্ম। বিকাশ ও নগদে ডিপোজিট এবং উইথড্র।',st:['প্যাকেজ বেছে নিন, প্রতিদিন টাস্ক করুন','বোনাস নিন ও বন্ধুদের ইনভাইট করুন','ব্যালেন্স বিকাশ বা নগদে উইথড্র করুন']},sup:{wa:'01XXXXXXXXX',tg:'@earnhub_support',mail:'support@earnhub.example',hrs:'সকাল ১০টা থেকে রাত ১০টা'},foot:'© EarnHub. সর্বস্বত্ব সংরক্ষিত।'}};
-var D=ld('adm',DEF);if(!D.ab)D.ab=JSON.parse(JSON.stringify(DEF.ab));var tab='dash',ptab='dep',psite='all',ftab='tk',q='';
-function persist(){sv('adm',D)}
-function toast(m){var t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display='none'},1600)}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
-function g(p){return p.split('.').reduce(function(o,k){return o[k]},D)}
-function st(p,v){var a=p.split('.'),l=a.pop();a.reduce(function(o,k){return o[k]},D)[l]=v}
+var V=$('#view');
+var CF=null,dirty=0,tab='dash',ftab='tk',usite='',ostat='',uq='',loading=false;
+var GN=['নীল','কমলা','বেগুনি','সবুজ'],GR=['linear-gradient(135deg,#1a7a96,#16206a)','linear-gradient(135deg,#e8501c,#a31d5c)','linear-gradient(135deg,#6a2cc9,#2b1a7a)','linear-gradient(135deg,#0f8a5a,#164a6a)'];
+var NAV=[['dash','📊 ড্যাশবোর্ড'],['usr','👥 ইউজার'],['ord','🛒 SMM অর্ডার'],['msg','💬 মেসেজ'],['free','💰 Free Income'],['ban','📣 ব্যানার ও প্রমোশন'],['smm','🧾 SMM সার্ভিস'],['set','⚙️ সেটিংস']];
+var CFG_TABS={free:1,ban:1,smm:1,set:1};
+
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
+function fm(n){return Number(n||0).toFixed(2).replace(/\.?0+$/,'')}
+function dt(d){return new Date(d).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}
+function toast(m,bad){var t=$('#toast');t.textContent=m;t.className='toast'+(bad?' er':'');t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display='none'},2400)}
+async function api(p,b){
+  var r=await fetch(p,{method:b!==undefined?'POST':'GET',headers:{'Content-Type':'application/json'},body:b!==undefined?JSON.stringify(b):undefined,credentials:'same-origin'});
+  var d={};try{d=await r.json()}catch(e){}
+  if(r.status===401){toast('অ্যাডমিন লগইন শেষ। আবার ঢুকুন।',true);setTimeout(function(){location.href='/'},1500);throw new Error('login')}
+  if(!r.ok||d.ok===false)throw new Error(d.msg||('সমস্যা হয়েছে ('+r.status+')'));
+  return d;
+}
+function g(p){return p.split('.').reduce(function(o,k){return o[k]},CF)}
+function st(p,v){var a=p.split('.'),l=a.pop();a.reduce(function(o,k){return o[k]},CF)[l]=v}
 function f(p,lb,ty){return '<div><label>'+lb+'</label><input data-p="'+p+'" type="'+(ty||'text')+'"'+(ty==='number'?' step="any"':'')+' value="'+esc(g(p))+'"></div>'}
-function sel(p,lb,o,re){var v=g(p);return '<div><label>'+lb+'</label><select data-p="'+p+'" data-n="1"'+(re?' data-re="1"':'')+'>'+o.map(function(x,i){return '<option value="'+x[0]+'"'+(String(x[0])===String(v)?' selected':'')+'>'+x[1]+'</option>'}).join('')+'</select></div>'}
-function tg(p,lb){return '<label class="sw"><input type="checkbox" data-p="'+p+'" data-b="1"'+(g(p)?' checked':'')+'> '+lb+'</label>'}
-function bd(s){var c=s==='Approved'||s==='Completed'?'done':(s==='Rejected'||s==='Cancelled'?'bad':'pend');return '<span class="badge '+c+'">'+s+'</span>'}
+function sel(p,lb,o){var v=g(p);return '<div><label>'+lb+'</label><select data-p="'+p+'" data-n="1">'+o.map(function(x){return '<option value="'+x[0]+'"'+(String(x[0])===String(v)?' selected':'')+'>'+esc(x[1])+'</option>'}).join('')+'</select></div>'}
+function tg(p,lb){return '<label class="sw"><input type="checkbox" data-p="'+p+'" data-b="1"'+(g(p)!==false?' checked':'')+'> '+lb+'</label>'}
 function site(s){return '<span class="badge '+(s==='smm'?'s1':'s2')+'">'+(s==='smm'?'SMM Panel':'Free Income')+'</span>'}
-function amt(t){return t.s==='smm'?'$'+t.a+' (৳'+Math.round(t.a*D.rate)+')':'৳'+t.a}
 function sub(items,cur,key){return '<div class="sub">'+items.map(function(i){return '<button data-'+key+'="'+i[0]+'" class="'+(i[0]===cur?'on':'')+'">'+i[1]+'</button>'}).join('')+'</div>'}
-function pend(t){return D.tx.filter(function(x){return x.t===t&&x.st==='Pending'})}
+function setDirty(){dirty++;$('#savebar').style.display='block';$('#sbt').textContent='সেভ না করা পরিবর্তন আছে'}
+function clearDirty(){dirty=0;$('#savebar').style.display='none'}
+function money(site,n){return (site==='smm'?'$':'৳')+fm(n)}
 
-function dash(){var pd=pend('dep'),pw=pend('wd'),su=D.users.filter(function(u){return u.s==='smm'}).length;
- var h='<div class="grid g4"><div class="stat"><b>'+D.users.length+'</b><span>মোট ইউজার</span></div><div class="stat"><b>'+pd.length+'</b><span>পেন্ডিং ডিপোজিট</span></div><div class="stat"><b>'+pw.length+'</b><span>পেন্ডিং উইথড্র</span></div><div class="stat"><b>'+D.ord.filter(function(o){return o.st==='Pending'}).length+'</b><span>নতুন SMM অর্ডার</span></div></div><h3 class="sec">দুই সাইট</h3><div class="grid"><div class="card"><div class="row"><b>SMM Panel</b>'+site('smm')+'</div><div class="mut">'+su+' ইউজার · '+D.ord.length+' অর্ডার · '+D.smm.filter(function(s){return s.on}).length+' সার্ভিস চালু</div></div><div class="card"><div class="row"><b>Free Income</b>'+site('free')+'</div><div class="mut">'+(D.users.length-su)+' ইউজার · '+D.tk.filter(function(s){return s.on}).length+' টাস্ক চালু · '+D.pr.length+' প্রমোশন</div></div></div>';
- h+='<div class="card">'+tg('set.maint','রক্ষণাবেক্ষণ মোড (দুই সাইট বন্ধ)')+'</div><h3 class="sec">অপেক্ষমাণ অনুরোধ</h3>';var all=pd.concat(pw);if(!all.length)h+='<div class="card mut">কোনো অপেক্ষমাণ অনুরোধ নেই।</div>';
- all.forEach(function(t){h+=txCard(t)});return h}
-function txCard(t){return '<div class="card"><div class="row"><b>'+t.u+'</b><span>'+site(t.s)+' '+bd(t.st)+'</span></div><div class="row" style="margin-top:6px"><span>'+(t.t==='dep'?'ডিপোজিট':'উইথড্র')+' <b style="color:var(--gd)">'+amt(t)+'</b></span><span class="mut">'+t.m+' · '+t.x+'</span></div>'+(t.st==='Pending'?'<div style="display:flex;gap:8px;margin-top:10px"><button class="btn ok" data-ap="'+t.id+'">অ্যাপ্রুভ</button><button class="btn rd" data-rj="'+t.id+'">রিজেক্ট</button></div>':'')+'</div>'}
-function pay(){var h=sub([['dep','ডিপোজিট'],['wd','উইথড্র']],ptab,'pt')+sub([['all','সব সাইট'],['smm','SMM Panel'],['free','Free Income']],psite,'ps');
- var L=D.tx.filter(function(t){return t.t===ptab&&(psite==='all'||t.s===psite)}).sort(function(a,b){return b.id-a.id});if(!L.length)h+='<div class="card mut">কিছু নেই।</div>';L.forEach(function(t){h+=txCard(t)});return h}
-function ulist(){var L=D.users.filter(function(u){return !q||(u.n+u.ph).toLowerCase().indexOf(q.toLowerCase())>-1}),h='';
- L.forEach(function(u){var i=D.users.indexOf(u);h+='<div class="card"><div class="row"><b>'+u.n+'</b><span>'+site(u.s)+(u.ban?' <span class="badge bad">Banned</span>':'')+'</span></div><div class="mut">'+u.ph+'</div><div class="grid">'+f('users.'+i+'.bal','ব্যালেন্স ('+(u.s==='smm'?'$':'৳')+')','number')+(u.s==='free'?sel('users.'+i+'.pk','প্যাকেজ',D.pk.map(function(p,j){return [j,p.n]})):'<div></div>')+'</div><button class="btn '+(u.ban?'ok':'rd')+'" style="margin-top:10px" data-ban="'+u.id+'">'+(u.ban?'আনব্যান করুন':'ব্যান করুন')+'</button></div>'});
- return h||'<div class="card mut">কোনো ইউজার পাওয়া যায়নি।</div>'}
-function users(){return '<input type="text" id="uq" placeholder="নাম বা ফোন দিয়ে খুঁজুন" value="'+esc(q)+'" style="margin-bottom:12px"><div id="ul">'+ulist()+'</div>'}
+/* ---------- ড্যাশবোর্ড ---------- */
+async function dash(){
+  V.innerHTML='<div class="mut">লোড হচ্ছে...</div>';
+  var d=await api('/api/admin/overview');
+  V.innerHTML='<div class="grid g4"><div class="stat"><b>'+d.users.total+'</b><span>মোট ইউজার</span></div><div class="stat"><b>'+d.users.smm+'</b><span>SMM Panel</span></div><div class="stat"><b>'+d.users.free+'</b><span>Free Income</span></div><div class="stat"><b>'+d.users.today+'</b><span>আজ নতুন</span></div></div>'+
+    '<h3 class="sec">SMM অর্ডার</h3><div class="grid g3"><div class="stat"><b style="color:var(--gd)">'+d.orders.pending+'</b><span>Pending</span></div><div class="stat"><b>'+d.orders.processing+'</b><span>Processing</span></div><div class="stat"><b style="color:var(--ok)">'+d.orders.completed+'</b><span>Completed</span></div></div>'+
+    '<h3 class="sec">মেসেজ</h3><div class="grid"><div class="stat"><b>'+d.messages.support+'</b><span>কাস্টমার কেয়ার</span></div><div class="stat"><b>'+d.messages.custom+'</b><span>কাস্টম অর্ডার</span></div></div>'+
+    '<div class="card" style="margin-top:12px"><span class="mut">ডিপোজিট ও উইথড্র আপনার ই ওয়ালেটে যায়, এখানে নয়। এই প্যানেলে ইউজার দেখা ও সব কনটেন্ট এডিট করা হয়।</span></div>'+
+    '<h3 class="sec">সাম্প্রতিক ইউজার</h3>'+(d.recent.length?d.recent.map(function(u){return '<div class="card row"><div><b>'+esc(u.username)+'</b><div class="mut">'+dt(u.createdAt)+'</div></div>'+site(u.site)+'</div>'}).join(''):'<div class="card mut">কোনো ইউজার নেই</div>');
+}
 
-function smm(){var h='<div class="card">'+f('rate','১ ডলার = কত টাকা','number')+'</div><h3 class="sec">অর্ডার ম্যানেজ</h3>';
- D.ord.forEach(function(o,i){h+='<div class="card"><div class="row"><b>#'+o.id+' '+o.u+'</b>'+bd(o.st)+'</div><div class="mut">'+o.pf+' '+o.sv+' · '+o.q+' টি · $'+o.c+'</div>'+sel('ord.'+i+'.st','স্ট্যাটাস',['Pending','Processing','Completed','Cancelled'].map(function(s){return [s,s]}),1)+'</div>'});
- h+='<div class="row"><h3 class="sec">সার্ভিস ও প্রাইস (১০০০-এ)</h3><button class="btn" data-add="smm">+ নতুন</button></div>';
- D.smm.forEach(function(s,i){h+='<div class="card"><div class="grid g3">'+f('smm.'+i+'.pf','প্ল্যাটফর্ম')+f('smm.'+i+'.sv','সার্ভিস')+f('smm.'+i+'.p','দাম ($)','number')+'</div>'+im('smm.'+i+'.img','প্ল্যাটফর্ম লোগো/ছবি')+'<div class="row">'+tg('smm.'+i+'.on','চালু')+'<button class="btn rd" data-del="smm.'+i+'">মুছুন</button></div></div>'});return h}
+/* ---------- ইউজার ---------- */
+async function users(){
+  V.innerHTML='<input type="text" id="uq" placeholder="নাম বা ফোন দিয়ে খুঁজুন" value="'+esc(uq)+'" style="margin-bottom:10px">'+sub([['','সব'],['smm','SMM Panel'],['free','Free Income']],usite,'us')+'<div id="ul"><div class="mut">লোড হচ্ছে...</div></div>';
+  var t;$('#uq').oninput=function(){uq=this.value;clearTimeout(t);t=setTimeout(loadUsers,350)};
+  loadUsers();
+}
+async function loadUsers(){
+  var e=$('#ul');if(!e)return;
+  try{
+    var d=await api('/api/admin/users?q='+encodeURIComponent(uq)+'&site='+usite);
+    if(!CF)CF=(await api('/api/admin/config')).cfg;
+    e.innerHTML=d.items.length?d.items.map(function(u){
+      return '<div class="card"><div class="row"><div><b>'+esc(u.username)+'</b>'+(u.banned?' <span class="badge bad">Banned</span>':'')+'<div class="mut">'+esc(u.phone||'')+' · '+dt(u.createdAt)+'</div></div>'+site(u.site)+'</div>'+
+        '<div class="grid g3" style="margin-top:8px"><div class="stat" style="padding:10px"><b style="font-size:17px">'+money(u.site,u.balance)+'</b><span>ব্যালেন্স</span></div>'+
+        (u.site==='free'?'<div class="stat" style="padding:10px"><b style="font-size:17px">৳'+fm(u.earn)+'</b><span>মোট আয়</span></div><div class="stat" style="padding:10px"><b style="font-size:17px">'+esc((CF.pk[u.pkg]||CF.pk[0]).n)+'</b><span>প্যাকেজ</span></div>':'')+'</div>'+
+        '<div class="grid" style="margin-top:6px"><div><label>ব্যালেন্স যোগ (+) বা কাটুন (−)</label><input type="number" step="any" id="am'+u.id+'" placeholder="যেমন 50 বা -20"></div><div><label>কারণ (নোট)</label><input type="text" id="nt'+u.id+'" placeholder="ঐচ্ছিক"></div></div>'+
+        '<div class="row" style="margin-top:8px"><button class="btn" data-adj="'+u.id+'">ব্যালেন্স বদলান</button>'+(u.site==='free'?'<select data-pkg="'+u.id+'" style="width:auto">'+CF.pk.map(function(p,i){return '<option value="'+i+'"'+(i===u.pkg?' selected':'')+'>'+esc(p.n)+'</option>'}).join('')+'</select>':'')+'<button class="btn '+(u.banned?'ok':'rd')+'" data-ban="'+u.id+'" data-v="'+(u.banned?'unban':'ban')+'">'+(u.banned?'আনব্যান':'ব্যান করুন')+'</button></div></div>';
+    }).join(''):'<div class="card mut">কোনো ইউজার পাওয়া যায়নি।</div>';
+  }catch(x){if(x.message!=='login')e.innerHTML='<div class="card mut">'+esc(x.message)+'</div>'}
+}
 
-function free(){var h=sub([['tk','টাস্ক'],['pk','প্যাকেজ'],['bn','বোনাস'],['sp','স্পিন'],['rf','রেফারেল']],ftab,'ft');
- if(ftab==='tk'){h+='<div class="row"><span class="mut">Ad ও Video Earning টাস্ক</span><button class="btn" data-add="tk">+ নতুন</button></div><br>';D.tk.forEach(function(t,i){h+='<div class="card"><div class="grid">'+sel('tk.'+i+'.t','ধরন',[['ad','Ad Earning'],['vid','Video Earning']])+f('tk.'+i+'.n','নাম')+'</div>'+f('tk.'+i+'.l','অফিসিয়াল লিংক','url')+im('tk.'+i+'.img','টাস্কের ছবি')+'<div class="row">'+tg('tk.'+i+'.on','চালু')+'<button class="btn rd" data-del="tk.'+i+'">মুছুন</button></div></div>'})}
- if(ftab==='pk')D.pk.forEach(function(p,i){h+='<div class="card"><b>'+p.n+'</b><div class="grid g3">'+f('pk.'+i+'.pr','দাম (৳)','number')+f('pk.'+i+'.lim','দৈনিক টাস্ক','number')+f('pk.'+i+'.rw','প্রতি টাস্ক (৳)','number')+'</div>'+im('pk.'+i+'.img','প্যাকেজের ছবি')+'</div>'});
- if(ftab==='bn')D.bn.forEach(function(b,i){h+='<div class="card">'+f('bn.'+i+'.v',b.n+' (৳)','number')+'</div>'});
- if(ftab==='sp'){h+='<div class="mut" style="margin-bottom:8px">১৬ ঘরের পুরস্কার (৳) ও জেতার সম্ভাবনা। সম্ভাবনা বেশি মানে ঘরটা বেশি আসবে।</div><div class="grid g4">';D.wv.forEach(function(v,i){h+='<div class="card" style="padding:10px;margin:0"><div class="mut">ঘর '+(i+1)+'</div>'+f('wv.'+i,'পুরস্কার ৳','number')+f('ww.'+i,'সম্ভাবনা','number')+'</div>'});h+='</div>'}
- if(ftab==='rf')h+='<div class="card"><div class="grid">'+f('ref.su','সাইনআপ বোনাস (৳)','number')+f('ref.pct','আজীবন কমিশন (%)','number')+'</div></div>';return h}
+/* ---------- SMM অর্ডার ---------- */
+var STS=['Pending','Processing','Completed','Cancelled'];
+function stCls(s){return s==='Completed'?'done':(s==='Processing'?'run':(s==='Cancelled'?'bad':'pend'))}
+async function orders(){
+  V.innerHTML=sub([['','সব']].concat(STS.map(function(s){return [s,s]})),ostat,'os')+'<div id="ol"><div class="mut">লোড হচ্ছে...</div></div>';
+  var d=await api('/api/admin/orders?status='+ostat);
+  $('#ol').innerHTML=d.items.length?d.items.map(function(o){
+    var locked=o.status==='Completed'||o.status==='Cancelled';
+    return '<div class="card"><div class="row"><b>'+esc(o.pf)+' '+esc(o.sv)+'</b><span class="badge '+stCls(o.status)+'">'+esc(o.status)+'</span></div><div class="mut">👤 '+esc(o.username)+' · '+o.qty+' টি · $'+fm(o.cost)+' · '+dt(o.createdAt)+'</div><div class="mut" style="word-break:break-all">'+esc(o.link)+'</div>'+
+      (locked?'':'<div class="row" style="margin-top:8px"><select data-ost="'+o.id+'" style="width:auto">'+STS.map(function(s){return '<option'+(s===o.status?' selected':'')+'>'+s+'</option>'}).join('')+'</select><span class="mut">Cancelled করলে টাকা ফেরত যায়</span></div>')+'</div>';
+  }).join(''):'<div class="card mut">কোনো অর্ডার নেই।</div>';
+}
 
-function ban(){var h='<div class="row"><h3 class="sec" style="margin-top:0">থিম ব্যানার (হোমের উপরে)</h3><button class="btn" data-add="bnr">+ নতুন</button></div>';
- D.bnr.forEach(function(b,i){h+='<div class="card"><div class="sw2" style="height:46px;background:'+(b.img?'url('+b.img+') center/cover,':'')+GR[b.c]+';display:flex;align-items:center;padding:0 12px;font-weight:700">'+esc(b.t)+'</div><div class="grid">'+f('bnr.'+i+'.t','কোম্পানির নাম')+f('bnr.'+i+'.d','লেখা')+'</div>'+sel('bnr.'+i+'.c','রঙ',GN.map(function(n,j){return [j,n]}),1)+im('bnr.'+i+'.img','ব্যানার ছবি')+'<div class="row">'+tg('bnr.'+i+'.on','চালু')+'<button class="btn rd" data-del="bnr.'+i+'">মুছুন</button></div></div>'});
- h+='<div class="row"><h3 class="sec">প্রমোশন (ইউজাররা কাজ করবে)</h3><button class="btn" data-add="pr">+ নতুন</button></div>';
- D.pr.forEach(function(p,i){h+='<div class="card"><div class="grid">'+f('pr.'+i+'.n','কোম্পানি')+f('pr.'+i+'.rw','রিওয়ার্ড (৳)','number')+'</div>'+f('pr.'+i+'.d','বিবরণ')+f('pr.'+i+'.l','লিংক','url')+im('pr.'+i+'.img','কোম্পানির ছবি')+'<div class="row">'+tg('pr.'+i+'.on','চালু')+'<button class="btn rd" data-del="pr.'+i+'">মুছুন</button></div></div>'});return h}
+/* ---------- মেসেজ ---------- */
+async function msgs(){
+  V.innerHTML='<div class="mut">লোড হচ্ছে...</div>';
+  var d=await api('/api/admin/messages');
+  V.innerHTML='<h3 class="sec" style="margin-top:0">কাস্টমার কেয়ার ('+d.support.length+')</h3>'+(d.support.length?d.support.map(function(m){return '<div class="card"><div class="row"><b>👤 '+esc(m.username)+'</b><span class="mut">'+dt(m.createdAt)+'</span></div><div class="msg">'+esc(m.message)+'</div><button class="btn rd" data-md="support" data-id="'+m.id+'">মুছুন</button></div>'}).join(''):'<div class="card mut">কোনো মেসেজ নেই।</div>')+
+    '<h3 class="sec">কাস্টম অর্ডারের রিকোয়েস্ট ('+d.custom.length+')</h3>'+(d.custom.length?d.custom.map(function(m){return '<div class="card"><div class="row"><b>👤 '+esc(m.username)+'</b><span class="mut">'+dt(m.createdAt)+'</span></div><div class="msg">'+esc(m.text)+'</div><div class="mut" style="word-break:break-all">'+esc(m.link)+' · বাজেট $'+fm(m.budget)+'</div><button class="btn rd" data-md="custom" data-id="'+m.id+'" style="margin-top:6px">মুছুন</button></div>'}).join(''):'<div class="card mut">কোনো রিকোয়েস্ট নেই।</div>');
+}
 
-function sett(){return '<div class="card">'+f('set.name','সাইটের নাম')+im('set.logo','সাইটের লোগো')+'</div><div class="card"><b>পেমেন্ট তথ্য (ইউজার সাইটে দেখানো হবে)</b><div class="grid">'+f('set.bk','bKash নাম্বার')+f('set.ng','Nagad নাম্বার')+f('set.mindep','সর্বনিম্ন ডিপোজিট (৳)','number')+f('set.minwd','সর্বনিম্ন উইথড্র (৳)','number')+'</div></div><button class="btn rd" data-reset="1">সব ডেমো ডাটা রিসেট</button>'}
+/* ---------- Free Income সেটিং ---------- */
+function free(){
+  var h=sub([['tk','টাস্ক'],['pk','প্যাকেজ'],['bn','বোনাস'],['sp','স্পিন'],['rf','রেফারেল']],ftab,'ft');
+  if(ftab==='tk'){
+    h+='<div class="row" style="margin-bottom:8px"><span class="mut">টাস্ক মুছা যায় না, বন্ধ করে রাখুন (চালু থাকা টাস্কই ইউজার দেখে)।</span><button class="btn" data-add="tk">+ নতুন টাস্ক</button></div>';
+    CF.tk.forEach(function(t,i){h+='<div class="card"><div class="grid">'+sel('tk.'+i+'.t','ধরন',[['ad','Ad Earning'],['vid','Video Earning']])+f('tk.'+i+'.n','নাম')+'</div>'+f('tk.'+i+'.l','অফিসিয়াল লিংক','url')+tg('tk.'+i+'.on','চালু')+'</div>'});
+  }
+  if(ftab==='pk'){
+    h+='<div class="mut" style="margin-bottom:8px">প্রতি টাস্কের রিওয়ার্ড ও দৈনিক লিমিট এখান থেকে ঠিক হয়।</div>';
+    CF.pk.forEach(function(p,i){h+='<div class="card"><div class="grid">'+f('pk.'+i+'.n','নাম')+f('pk.'+i+'.pr','দাম (৳)','number')+'</div><div class="grid" style="margin-top:4px">'+f('pk.'+i+'.lim','দৈনিক টাস্ক','number')+f('pk.'+i+'.rw','প্রতি টাস্ক (৳)','number')+'</div></div>'});
+  }
+  if(ftab==='bn'){
+    CF.bn.forEach(function(b,i){h+='<div class="card"><b>'+esc(b.n)+'</b><div class="grid">'+f('bn.'+i+'.v','পরিমাণ (৳)','number')+f('bn.'+i+'.h','কত ঘণ্টা পরপর নেওয়া যাবে','number')+'</div></div>'});
+    h+='<div class="card">'+sel('vipMin','VIP বোনাসের জন্য ন্যূনতম প্যাকেজ',CF.pk.map(function(p,i){return [i,p.n]}))+'</div>';
+  }
+  if(ftab==='sp'){
+    h+='<div class="mut" style="margin-bottom:8px">১৬ ঘরের পুরস্কার (৳) ও জেতার সম্ভাবনা। সম্ভাবনা যত বেশি, ঘরটা তত বেশি আসবে।</div><div class="grid g4">';
+    CF.wv.forEach(function(v,i){h+='<div class="card" style="padding:10px;margin:0"><div class="mut">ঘর '+(i+1)+'</div>'+f('wv.'+i,'পুরস্কার ৳','number')+f('ww.'+i,'সম্ভাবনা','number')+'</div>'});
+    h+='</div>';
+  }
+  if(ftab==='rf')h+='<div class="card"><div class="grid">'+f('ref.su','রেফারেল বোনাস (৳), বন্ধুর প্রথম ডিপোজিটে','number')+f('ref.pct','আজীবন কমিশন (%)','number')+'</div></div>';
+  V.innerHTML=h;
+}
 
-function im(p,lb){var v=g(p)||'';return '<div><label>'+lb+'</label><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'+(v?'<img src="'+v+'" alt="" style="width:44px;height:44px;border-radius:10px;object-fit:cover">':'<div style="width:44px;height:44px;border-radius:10px;background:var(--card);display:grid;place-items:center">🖼️</div>')+'<label class="btn gh" style="margin:0;cursor:pointer;color:var(--tx);display:inline-block;padding:7px 14px;font-size:14px">ছবি দিন<input type="file" accept="image/*" data-img="'+p+'" hidden></label>'+(v?'<button class="btn rd" data-rmimg="'+p+'">সরান</button>':'')+'</div></div>'}
-function dash2(){var su=D.users.filter(function(u){return u.s==='smm'}).length,bn=D.users.filter(function(u){return u.ban}).length;var h='<div class="grid g4"><div class="stat"><b>'+D.users.length+'</b><span>মোট ইউজার</span></div><div class="stat"><b>'+su+'</b><span>SMM Panel</span></div><div class="stat"><b>'+(D.users.length-su)+'</b><span>Free Income</span></div><div class="stat"><b>'+bn+'</b><span>ব্যান</span></div></div><div class="card" style="margin-top:12px">'+tg('set.maint','রক্ষণাবেক্ষণ মোড (দুই সাইট বন্ধ)')+'</div><div class="card mut">ডিপোজিট ও উইথড্র আপনার আলাদা ইউ ওয়ালেটে যায়, এই প্যানেলে নয়। এখানে শুধু ইউজার দেখা ও সব কনটেন্ট এডিট করা হয়।</div><h3 class="sec">সাম্প্রতিক ইউজার</h3>';D.users.slice(-5).reverse().forEach(function(u){h+='<div class="card row"><div><b>'+u.n+'</b><div class="mut">'+u.ph+'</div></div>'+site(u.s)+'</div>'});return h}
-function ta(p,lb){return '<div><label>'+lb+'</label><textarea data-p="'+p+'">'+esc(g(p))+'</textarea></div>'}
-function about(){var h='<div class="mut" style="margin-bottom:10px">ইউজার সাইটের সব লেখা, যোগাযোগ ও কোম্পানির তথ্য এখান থেকে বদলান।</div>';
- h+='<div class="card"><b>হোম পেজ (ল্যান্ডিং)</b>'+f('ab.land.h','বড় শিরোনাম')+f('ab.land.p','ছোট লেখা')+'<div class="grid">';
- D.ab.land.s.forEach(function(s,i){h+=f('ab.land.s.'+i+'.v','স্ট্যাট '+(i+1)+' সংখ্যা')+f('ab.land.s.'+i+'.l','স্ট্যাট '+(i+1)+' লেখা')});
- h+='</div>'+im('ab.land.img','হোম ব্যানার ছবি')+ta('ab.land.about','কোম্পানির About')+'</div>';
- h+='<div class="card"><div class="row"><b>SMM Panel</b>'+site('smm')+'</div>'+f('ab.smm.t','নাম')+f('ab.smm.hero','হোম ব্যানারের শিরোনাম')+ta('ab.smm.d','বিবরণ')+im('ab.smm.img','SMM ব্যানার ছবি')+'</div>';
- h+='<div class="card"><div class="row"><b>Free Income</b>'+site('free')+'</div>'+f('ab.free.t','নাম')+ta('ab.free.d','About বিবরণ')+im('ab.free.img','Free Income ব্যানার ছবি');
- D.ab.free.st.forEach(function(s,i){h+=f('ab.free.st.'+i,'কীভাবে কাজ করে, ধাপ '+(i+1))});h+='</div>';
- h+='<div class="card"><b>কাস্টমার কেয়ার</b><div class="grid">'+f('ab.sup.wa','WhatsApp নাম্বার')+f('ab.sup.tg','Telegram')+f('ab.sup.mail','ইমেইল')+f('ab.sup.hrs','সময়')+'</div></div>';
- h+='<div class="card"><b>ফুটার</b>'+f('ab.foot','কপিরাইট লেখা')+'</div>';return h}
-var V={dash:dash2,pay:pay,usr:users,smm:smm,free:free,ban:ban,ab:about,set:sett},NAV=[['dash','📊 ড্যাশবোর্ড'],['usr','👥 ইউজার'],['smm','🛒 SMM Panel'],['free','💰 Free Income'],['ban','📣 ব্যানার ও প্রমোশন'],['ab','📝 About ও কনটেন্ট'],['set','⚙️ সেটিংস']];
-var ADD={smm:{pf:'নতুন',sv:'সার্ভিস',p:1,on:true},tk:{t:'ad',n:'নতুন টাস্ক',l:'https://',on:true},bnr:{t:'নতুন কোম্পানি',d:'অফার লিখুন',c:0,on:true},pr:{n:'নতুন কোম্পানি',d:'বিবরণ',l:'https://',rw:5,on:true}};
-function render(){$('#nav').innerHTML=NAV.map(function(n){return '<button data-tab="'+n[0]+'" class="'+(n[0]===tab?'on':'')+'">'+n[1]+'</button>'}).join('');$('#view').innerHTML=V[tab]();var u=$('#uq');if(u)u.oninput=function(){q=this.value;$('#ul').innerHTML=ulist()}}
-function bal(name,d){D.users.forEach(function(u){if(u.n===name)u.bal=Math.round((u.bal+d)*100)/100})}
-document.addEventListener('change',function(e){var t=e.target.closest('[data-p]');if(!t)return;var v=t.dataset.b?t.checked:(t.type==='number'?(+t.value||0):(t.dataset.n&&!isNaN(t.value)&&t.value!==''?+t.value:t.value));st(t.dataset.p,v);persist();toast('সেভ হয়েছে');if(t.dataset.re||t.dataset.b&&tab==='dash')render()});
-document.addEventListener('change',function(e){var t=e.target;if(!t.dataset||!t.dataset.img||!t.files[0])return;var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var s=Math.min(1,480/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);st(t.dataset.img,c.toDataURL('image/jpeg',.75));persist();toast('ছবি সেভ হয়েছে');render()};im.src=r.result};r.readAsDataURL(t.files[0])});
-document.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var d=b.dataset;
- if(d.rmimg){st(d.rmimg,'');persist();render();return}
- if(d.tab){tab=d.tab;render();window.scrollTo(0,0);return}
- if(d.pt){ptab=d.pt;render();return}if(d.ps){psite=d.ps;render();return}if(d.ft){ftab=d.ft;render();return}
- if(d.ap||d.rj){var t=D.tx.filter(function(x){return x.id==(d.ap||d.rj)})[0];if(d.ap){t.st='Approved';if(t.t==='dep')bal(t.u,t.a)}else{t.st='Rejected';if(t.t==='wd')bal(t.u,t.a)}persist();toast(d.ap?'অ্যাপ্রুভ হয়েছে':'রিজেক্ট হয়েছে');render();return}
- if(d.ban){D.users.forEach(function(u){if(u.id==d.ban)u.ban=!u.ban});persist();toast('আপডেট হয়েছে');render();return}
- if(d.add){D[d.add].push(JSON.parse(JSON.stringify(ADD[d.add])));persist();toast('যোগ হয়েছে');render();return}
- if(d.del){var a=d.del.split('.');D[a[0]].splice(+a[1],1);persist();toast('মুছে গেছে');render();return}
- if(d.reset){D=JSON.parse(JSON.stringify(DEF));persist();toast('রিসেট হয়েছে');render()}});
+/* ---------- ব্যানার ও প্রমোশন ---------- */
+function ban(){
+  var h='<div class="row"><h3 class="sec" style="margin:0">থিম ব্যানার (হোমের উপরে)</h3><button class="btn" data-add="bnr">+ নতুন</button></div><br>';
+  CF.bnr.forEach(function(b,i){h+='<div class="card"><div class="sw2" style="background:'+GR[b.c%4]+'">'+esc(b.t)+'</div><div class="grid">'+f('bnr.'+i+'.t','কোম্পানির নাম')+f('bnr.'+i+'.d','লেখা')+'</div>'+sel('bnr.'+i+'.c','রঙ',GN.map(function(n,j){return [j,n]}))+'<div class="row">'+tg('bnr.'+i+'.on','চালু')+'<button class="btn rd" data-del="bnr.'+i+'">মুছুন</button></div></div>'});
+  h+='<div class="row"><h3 class="sec" style="margin-bottom:0">প্রমোশন (ইউজাররা কাজ করে রিওয়ার্ড পাবে)</h3><button class="btn" data-add="pr">+ নতুন</button></div><div class="mut" style="margin:6px 0 10px">প্রমোশন মুছা যায় না, বন্ধ করে রাখুন।</div>';
+  CF.pr.forEach(function(p,i){h+='<div class="card"><div class="grid">'+f('pr.'+i+'.n','কোম্পানি')+f('pr.'+i+'.rw','রিওয়ার্ড (৳)','number')+'</div>'+f('pr.'+i+'.d','বিবরণ')+f('pr.'+i+'.l','লিংক','url')+sel('pr.'+i+'.c','রঙ',GN.map(function(n,j){return [j,n]}))+tg('pr.'+i+'.on','চালু')+'</div>'});
+  V.innerHTML=h;
+}
+
+/* ---------- SMM সার্ভিস ---------- */
+function smm(){
+  var h='<div class="card">'+f('rate','১ ডলার = কত টাকা','number')+'</div><div class="row"><h3 class="sec" style="margin:0">সার্ভিস ও দাম (১০০০-এ, ডলারে)</h3><button class="btn" data-add="smm">+ নতুন</button></div><br>';
+  CF.smm.forEach(function(s,i){h+='<div class="card"><div class="grid g3">'+f('smm.'+i+'.pf','প্ল্যাটফর্ম')+f('smm.'+i+'.sv','সার্ভিস')+f('smm.'+i+'.p','দাম ($)','number')+'</div><div class="row">'+tg('smm.'+i+'.on','চালু')+'<button class="btn rd" data-del="smm.'+i+'">মুছুন</button></div></div>'});
+  V.innerHTML=h;
+}
+
+/* ---------- সেটিংস ---------- */
+function setT(){
+  V.innerHTML='<div class="card">'+f('set.name','সাইটের নাম')+'</div><div class="card"><b>পেমেন্ট তথ্য (ইউজার সাইটে দেখানো হবে)</b><div class="grid">'+f('set.bk','bKash নাম্বার')+f('set.ng','Nagad নাম্বার')+f('set.mindep','সর্বনিম্ন ডিপোজিট (৳, Free Income)','number')+f('set.minwd','সর্বনিম্ন উইথড্র (৳)','number')+'</div></div><div class="card mut">এই নাম্বারগুলো ইউজারদের শুধু দেখানোর জন্য। টাকা আসে আপনার ই ওয়ালেটে।</div>';
+}
+
+var ADD={tk:{t:'ad',n:'নতুন টাস্ক',l:'https://',on:true},bnr:{t:'নতুন কোম্পানি',d:'অফার লিখুন',c:0,on:true},pr:{n:'নতুন কোম্পানি',d:'বিবরণ',l:'https://',rw:5,c:0,on:true},smm:{pf:'নতুন',sv:'সার্ভিস',p:1,on:true}};
+async function render(){
+  $('#nav').innerHTML=NAV.map(function(n){return '<button data-tab="'+n[0]+'" class="'+(n[0]===tab?'on':'')+'">'+n[1]+'</button>'}).join('');
+  try{
+    if(CFG_TABS[tab]&&!CF){V.innerHTML='<div class="mut">লোড হচ্ছে...</div>';CF=(await api('/api/admin/config')).cfg}
+    ({dash:dash,usr:users,ord:orders,msg:msgs,free:free,ban:ban,smm:smm,set:setT})[tab]();
+  }catch(e){if(e.message!=='login')V.innerHTML='<div class="card mut">'+esc(e.message)+'</div>'}
+}
+
+document.addEventListener('change',function(e){
+  var t=e.target;
+  if(t.dataset.p){var v=t.dataset.b?t.checked:(t.type==='number'?(t.value===''?'':Number(t.value)):(t.dataset.n?Number(t.value):t.value));st(t.dataset.p,v);setDirty();return}
+  if(t.dataset.pkg){api('/api/admin/user',{id:t.dataset.pkg,action:'pkg',pkg:Number(t.value)}).then(function(){toast('প্যাকেজ বদলেছে')}).catch(function(x){toast(x.message,true)});return}
+  if(t.dataset.ost){api('/api/admin/order',{id:t.dataset.ost,status:t.value}).then(function(r){toast(r.refunded?'বাতিল হয়েছে, $'+fm(r.refunded)+' ফেরত গেছে':'অবস্থা বদলেছে');orders()}).catch(function(x){toast(x.message,true);orders()});return}
+});
+document.addEventListener('click',function(e){
+  var t=e.target.closest('button');if(!t)return;var d=t.dataset;
+  if(d.tab){tab=d.tab;render();window.scrollTo(0,0);return}
+  if(d.ft){ftab=d.ft;free();return}
+  if(d.us!==undefined){usite=d.us;users();return}
+  if(d.os!==undefined){ostat=d.os;orders();return}
+  if(d.add){CF[d.add].push(JSON.parse(JSON.stringify(ADD[d.add])));setDirty();render();return}
+  if(d.del){var a=d.del.split('.');CF[a[0]].splice(Number(a[1]),1);setDirty();render();return}
+  if(d.adj){var am=$('#am'+d.adj).value,nt=$('#nt'+d.adj).value;
+    api('/api/admin/user',{id:d.adj,action:'adjust',amount:Number(am),note:nt}).then(function(r){toast('ব্যালেন্স বদলেছে, এখন '+fm(r.balance));loadUsers()}).catch(function(x){toast(x.message,true)});return}
+  if(d.ban){if(!confirm(d.v==='ban'?'এই ইউজারকে ব্যান করবেন?':'আনব্যান করবেন?'))return;
+    api('/api/admin/user',{id:d.ban,action:d.v}).then(function(){toast('হয়েছে');loadUsers()}).catch(function(x){toast(x.message,true)});return}
+  if(d.md){if(!confirm('মুছে ফেলবেন?'))return;api('/api/admin/message/delete',{kind:d.md,id:d.id}).then(function(){msgs()}).catch(function(x){toast(x.message,true)});return}
+});
+$('#sbb').onclick=async function(){
+  var b=this;b.disabled=true;
+  try{await api('/api/admin/config',{cfg:CF});clearDirty();toast('সেভ হয়েছে, সাইটে নতুন সেটিং চালু');CF=(await api('/api/admin/config')).cfg;render()}
+  catch(e){if(e.message!=='login')toast(e.message,true)}
+  b.disabled=false;
+};
+window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue=''}});
 render();
 })();
 </script>
 </body>
-  </html>
+</html>
