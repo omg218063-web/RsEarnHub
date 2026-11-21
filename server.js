@@ -22,12 +22,18 @@ let dbState = 'not configured';
 if (process.env.MONGODB_URI) {
   mongoose
     .connect(process.env.MONGODB_URI)
-    .then(() => { dbState = 'connected'; })
+    .then(() => {
+      dbState = 'connected';
+      // একটা ফোন নাম্বারে একটাই অ্যাকাউন্ট (পুরনো ডুপ্লিকেট থাকলে ইনডেক্স হবে না, তবে নতুন রেজিস্ট্রেশন তবুও আটকাবে)
+      User.collection.createIndex({ phone: 1 }, { unique: true, sparse: true })
+        .catch((e) => console.error('[ফোন ইনডেক্স] তৈরি হয়নি, পুরনো ডুপ্লিকেট নাম্বার আছে: ' + e.message));
+      setTimeout(probeWallet, 3000);
+    })
     .catch((e) => { dbState = 'error: ' + e.message; });
 }
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-// ================= সাইটের সেটিংস (ডাটাবেসে থাকে, পরে অ্যাডমিন থেকে বদলানো যাবে) =================
+// ================= সাইটের সেটিংস (ডাটাবেসে থাকে, অ্যাডমিন থেকে বদলানো যায়) =================
 const DEFAULT_CFG = {
   rate: Number(process.env.USD_RATE) || 125,
   tk: [
@@ -292,6 +298,8 @@ app.post('/api/register', needDb, limit(10, 60000), ah(async (req, res) => {
   if (!/^01\d{9}$/.test(String(phone))) return res.status(400).json({ ok: false, msg: 'সঠিক ১১ সংখ্যার ফোন নাম্বার দিন।' });
   if (String(password).length < 6) return res.status(400).json({ ok: false, msg: 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।' });
   if (!['smm', 'free'].includes(site)) return res.status(400).json({ ok: false, msg: 'সাইট বেছে নিন।' });
+  if (await User.exists({ username: un })) return res.status(409).json({ ok: false, msg: 'এই ইউজারনেম আগেই নেওয়া হয়েছে। অন্য নাম দিন।' });
+  if (await User.exists({ phone: String(phone) })) return res.status(409).json({ ok: false, msg: 'এই ফোন নাম্বার দিয়ে আগেই একটি অ্যাকাউন্ট খোলা হয়েছে। একটা নাম্বারে একটাই অ্যাকাউন্ট চলবে।' });
   let referredBy;
   if (site === 'free' && ref) {
     const rf = await User.findOne({ refCode: String(ref).trim().toUpperCase(), site: 'free' });
@@ -306,7 +314,8 @@ app.post('/api/register', needDb, limit(10, 60000), ah(async (req, res) => {
       return res.json({ ok: true, user: publicUser(u) });
     } catch (e) {
       if (e.code === 11000 && e.keyPattern && e.keyPattern.refCode) continue;
-      if (e.code === 11000) return res.status(409).json({ ok: false, msg: 'এই ইউজারনেম আগেই নেওয়া হয়েছে।' });
+      if (e.code === 11000 && e.keyPattern && e.keyPattern.phone) return res.status(409).json({ ok: false, msg: 'এই ফোন নাম্বার দিয়ে আগেই একটি অ্যাকাউন্ট খোলা হয়েছে। একটা নাম্বারে একটাই অ্যাকাউন্ট চলবে।' });
+      if (e.code === 11000) return res.status(409).json({ ok: false, msg: 'এই ইউজারনেম আগেই নেওয়া হয়েছে। অন্য নাম দিন।' });
       throw e;
     }
   }
@@ -391,16 +400,32 @@ async function sendToWallet(r, timeoutMs) {
   try { await r.save(); } catch (e) {}
   return false;
 }
+
+// সার্ভার চালুর সময় ওয়ালেটের সাথে সংযোগ পরীক্ষা (ফলাফল Render-এর লগে লেখা হয়)
+async function probeWallet() {
+  if (!WALLET_URL || !WALLET_KEY) { console.log('[wallet] WALLET_API_URL বা WALLET_API_KEY সেট করা নেই'); return; }
+  try {
+    const p = await fetch(WALLET_URL + '/api/requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': WALLET_KEY },
+      body: '{}',
+      signal: AbortSignal.timeout(60000)
+    });
+    console.log('[wallet] সংযোগ পরীক্ষা: HTTP ' + p.status + ({ 400: ' (ঠিক আছে)', 401: ' (কী মেলেনি)', 404: ' (ওয়ালেটে earnhub.js লোড হয়নি বা ঠিকানা ভুল)' }[p.status] || ''));
+  } catch (e) { console.error('[wallet] সংযোগ পরীক্ষা ব্যর্থ: ' + e.message); }
+}
+
+// প্রথম চেষ্টায় না পৌঁছালে প্রতি ২০ সেকেন্ডে আবার পাঠানো (৫০ সেকেন্ডের পুরনো রিকোয়েস্ট থেকে, যাতে প্রথম চেষ্টার সাথে ধাক্কা না লাগে)
 let retrying = false;
 setInterval(async () => {
   if (retrying || mongoose.connection.readyState !== 1) return;
   retrying = true;
   try {
-    const list = await Req.find({ walletSent: false, status: 'pending' }).limit(20);
+    const list = await Req.find({ walletSent: false, status: 'pending', createdAt: { $lt: new Date(Date.now() - 50000) } }).limit(20);
     for (const r of list) await sendToWallet(r, 40000);
   } catch (e) { console.error('retry error: ' + e.message); }
   retrying = false;
-}, 60000);
+}, 20000);
 
 app.get('/api/wallet-check', limit(6, 60000), ah(async (req, res) => {
   const out = { db: dbState, urlSet: !!WALLET_URL, keySet: !!WALLET_KEY, secretSet: !!WALLET_SECRET };
@@ -453,8 +478,9 @@ app.post('/api/deposit', needDb, auth, limit(10, 60000), ah(async (req, res) => 
     if (e.code === 11000) return res.status(409).json({ ok: false, msg: 'এই Transaction ID আগেই ব্যবহার হয়েছে।' });
     throw e;
   }
-  const sent = await sendToWallet(r, 8000);
-  res.json({ ok: true, id: r._id, status: r.status, walletSent: sent });
+  // ওয়ালেট ঘুমিয়ে থাকলে জাগতে সময় লাগে, তাই পেছনে পাঠানো হয়, ইউজারকে সাথে সাথে উত্তর দেওয়া হয়
+  sendToWallet(r, 45000).catch(() => {});
+  res.json({ ok: true, id: r._id, status: r.status });
 }));
 
 app.post('/api/withdraw', needDb, auth, onlySite('free'), limit(10, 60000), ah(async (req, res) => {
@@ -478,13 +504,14 @@ app.post('/api/withdraw', needDb, auth, onlySite('free'), limit(10, 60000), ah(a
     });
   } finally { session.endSession(); }
   if (!doc) return res.status(400).json({ ok: false, msg: 'ব্যালেন্স যথেষ্ট নয়।' });
-  const sent = await sendToWallet(doc, 8000);
-  res.json({ ok: true, id: doc._id, status: doc.status, walletSent: sent });
+  sendToWallet(doc, 45000).catch(() => {});
+  res.json({ ok: true, id: doc._id, status: doc.status });
 }));
 
+// ইউজার শুধু pending / approved / rejected দেখে (ভেতরের কোনো সংযোগের বার্তা নয়)
 app.get('/api/requests', needDb, auth, ah(async (req, res) => {
   const list = await Req.find({ user: req.user._id }).sort({ createdAt: -1 }).limit(50);
-  res.json({ ok: true, items: list.map((r) => ({ id: r._id, type: r.type, amount: r.amount, method: r.method, reference: r.reference, status: (r.status === 'pending' && !r.walletSent) ? '⚠️ ওয়ালেটে এখনো পৌঁছায়নি, আবার চেষ্টা চলছে' : r.status, error: r.walletError || null, createdAt: r.createdAt })) });
+  res.json({ ok: true, items: list.map((r) => ({ id: r._id, type: r.type, amount: r.amount, method: r.method, reference: r.reference, status: r.status, createdAt: r.createdAt })) });
 }));
 
 // লাইভ ট্রানজ্যাকশন: শুধু ওয়ালেটে অ্যাপ্রুভ হওয়া, নাম আংশিক ঢাকা
@@ -494,7 +521,7 @@ app.get('/api/live', needDb, ah(async (req, res) => {
 }));
 
 // ================= Free Income: আয় (সব হিসাব সার্ভারে) =================
-// খাতায় লেখা + রেফারেল কমিশন
+// ব্যালেন্স বদলানো + খাতায় লেখা + রেফারেল কমিশন
 async function earnLog(userDoc, amount, kind, note) {
   await Ledger.create({ user: userDoc._id, delta: amount, kind, note, earn: true });
   if (userDoc.referredBy) {
@@ -731,7 +758,14 @@ app.post('/api/wallet/webhook', needDb, ah(async (req, res) => {
   } finally { session.endSession(); }
   res.json({ ok: true, result });
 }));
-require('./admin-api')(app, { mongoose, User, Ledger, Order, Custom, Support, Config, getCfg, validAdminToken, getCookie, ah, needDb });
+
+// ================= অ্যাডমিন API (admin-api.js ফাইল থাকলে চালু হয়) =================
+try {
+  require('./admin-api')(app, { mongoose, User, Ledger, Order, Custom, Support, Config, getCfg, validAdminToken, getCookie, ah, needDb });
+} catch (e) {
+  console.error('[অ্যাডমিন API] চালু হয়নি (admin-api.js আছে কিনা দেখুন): ' + e.message);
+}
+
 // ================= পেজ =================
 function page(name, inject) {
   return (req, res) => {
