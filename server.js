@@ -24,16 +24,16 @@ if (process.env.MONGODB_URI) {
     .connect(process.env.MONGODB_URI)
     .then(() => {
       dbState = 'connected';
+      setTimeout(probeWallet, 3000);
       // একটা ফোন নাম্বারে একটাই অ্যাকাউন্ট (পুরনো ডুপ্লিকেট থাকলে ইনডেক্স হবে না, তবে নতুন রেজিস্ট্রেশন তবুও আটকাবে)
       User.collection.createIndex({ phone: 1 }, { unique: true, sparse: true })
         .catch((e) => console.error('[ফোন ইনডেক্স] তৈরি হয়নি, পুরনো ডুপ্লিকেট নাম্বার আছে: ' + e.message));
-      setTimeout(probeWallet, 3000);
     })
     .catch((e) => { dbState = 'error: ' + e.message; });
 }
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-// ================= সাইটের সেটিংস (ডাটাবেসে থাকে, অ্যাডমিন থেকে বদলানো যায়) =================
+// ================= সাইটের সেটিংস (ডাটাবেসে থাকে, পরে অ্যাডমিন থেকে বদলানো যাবে) =================
 const DEFAULT_CFG = {
   rate: Number(process.env.USD_RATE) || 125,
   tk: [
@@ -63,6 +63,9 @@ const DEFAULT_CFG = {
   wv: [5, 10, 2, 20, 5, 1, 10, 50, 5, 2, 20, 10, 1, 5, 100, 2],
   ww: [14, 10, 16, 3, 14, 18, 10, 1, 14, 16, 3, 10, 18, 14, 0.3, 16],
   ref: { su: 20, pct: 5 },
+  // রেড ডায়মন্ডের নতুন সেটিং: সাইনআপ বোনাস ও এক্সচেঞ্জ (redPer = কত রেড ডায়মন্ডে ৳১)
+  signupRed: 20,
+  ex: { on: true, redPer: 1, blackPer: 1, minRed: 50, minBlack: 20, capTaka: 500, minAgeHours: 24 },
   bnr: [
     { t: 'TechMart BD', d: 'সব গ্যাজেটে ২০% ছাড়', c: 0, on: true },
     { t: 'FoodieGo', d: 'প্রথম অর্ডারে ফ্রি ডেলিভারি', c: 1, on: true },
@@ -127,6 +130,9 @@ const User = mongoose.model('User', new mongoose.Schema({
   today: { d: String, tasks: [String], promos: [String], earned: { type: Number, default: 0 } },
   last: { daily: Date, login: Date, week: Date, month: Date, vip: Date },
   spinDay: String,
+  red: { type: Number, default: 0 },     // রেড ডায়মন্ড (বোনাস, স্পিন, টুর্নামেন্ট)
+  black: { type: Number, default: 0 },   // ব্ল্যাক ডায়মন্ড (দুর্লভ পুরস্কার)
+  exToday: { d: String, taka: { type: Number, default: 0 } },
   photo: String,
   createdAt: { type: Date, default: Date.now }
 }));
@@ -158,6 +164,7 @@ const Ledger = mongoose.model('Ledger', new mongoose.Schema({
   kind: String,
   note: String,
   earn: { type: Boolean, default: false },
+  cur: { type: String, default: 'taka' },   // taka / red / black
   at: { type: Date, default: Date.now, index: true }
 }));
 
@@ -269,7 +276,7 @@ function setUserCookie(res, id) {
   res.setHeader('Set-Cookie', 'eh_user=' + id + '.' + exp + '.' + sign('u:' + id + '.' + exp) + '; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=' + USER_SESSION_MS / 1000);
 }
 async function hashPw(pw, salt) { return (await scrypt(pw, salt, 64)).toString('hex'); }
-const publicUser = (u) => ({ username: u.username, site: u.site, balance: u.balance, pkg: u.pkg, earn: u.earn, photo: u.photo || '', refCode: u.refCode || '' });
+const publicUser = (u) => ({ username: u.username, site: u.site, balance: u.balance, red: u.red || 0, black: u.black || 0, pkg: u.pkg, earn: u.earn, photo: u.photo || '', refCode: u.refCode || '' });
 function newRefCode() { return 'EH' + crypto.randomBytes(4).toString('hex').slice(0, 5).toUpperCase(); }
 
 async function auth(req, res, next) {
@@ -307,9 +314,13 @@ app.post('/api/register', needDb, limit(10, 60000), ah(async (req, res) => {
   }
   const salt = crypto.randomBytes(16).toString('hex');
   const hash = await hashPw(String(password), salt);
+  const cfg0 = await getCfg();
+  const sb = site === 'free' ? (Number(cfg0.signupRed) || 0) : 0;   // সাইনআপ বোনাস (রেড ডায়মন্ড)
+  const per0 = Number(cfg0.ex.redPer) || 1;
   for (let i = 0; i < 5; i++) {
     try {
-      const u = await User.create({ username: un, phone: String(phone), site, salt, hash, refCode: site === 'free' ? newRefCode() : undefined, referredBy });
+      const u = await User.create({ username: un, phone: String(phone), site, salt, hash, refCode: site === 'free' ? newRefCode() : undefined, referredBy, red: sb, earn: sb / per0 });
+      if (sb > 0) await Ledger.create({ user: u._id, delta: sb, kind: 'signup', earn: true, cur: 'red' });
       setUserCookie(res, u._id);
       return res.json({ ok: true, user: publicUser(u) });
     } catch (e) {
@@ -341,6 +352,7 @@ app.get('/api/me', needDb, auth, (req, res) => res.json({ ok: true, user: public
 
 // পুরো অবস্থা: ব্যালেন্স, আজকের কাজ, বোনাসের সময়, সেটিংস
 app.get('/api/state', needDb, auth, limit(120, 60000), ah(async (req, res) => {
+  wakeWallet();
   const u = req.user;
   if (u.site === 'free' && !u.refCode) { u.refCode = newRefCode(); await u.save().catch(() => {}); }
   const cfg = await getCfg();
@@ -354,6 +366,7 @@ app.get('/api/state', needDb, auth, limit(120, 60000), ah(async (req, res) => {
     today: { tasks: t.tasks || [], promos: t.promos || [], earned: t.earned || 0 },
     last: u.last || {},
     spinToday: u.spinDay === day,
+    exUsed: (u.exToday && u.exToday.d === day) ? (u.exToday.taka || 0) : 0,
     refs: { count: refs },
     pendingRequests: pendingReq,
     cfg: publicCfg(cfg)
@@ -400,8 +413,21 @@ async function sendToWallet(r, timeoutMs) {
   try { await r.save(); } catch (e) {}
   return false;
 }
-
-// সার্ভার চালুর সময় ওয়ালেটের সাথে সংযোগ পরীক্ষা (ফলাফল Render-এর লগে লেখা হয়)
+// ওয়ালেট Render-এর ফ্রি প্ল্যানে ঘুমিয়ে থাকলে প্রথম ডাকে ৩০–৬০ সেকেন্ড লাগে। তাই ব্যাকগ্রাউন্ডে কয়েকবার চেষ্টা করা হয়।
+async function deliver(r) {
+  for (let i = 0; i < 3; i++) {
+    if (await sendToWallet(r, 60000)) return true;
+    await new Promise((x) => setTimeout(x, 5000));
+  }
+  return false;
+}
+// ইউজার সাইটে থাকলে ওয়ালেটকে জাগিয়ে রাখে (৪ মিনিটে সর্বোচ্চ একবার)
+let lastWake = 0;
+function wakeWallet() {
+  if (!WALLET_URL || Date.now() - lastWake < 4 * 60 * 1000) return;
+  lastWake = Date.now();
+  fetch(WALLET_URL + '/health', { signal: AbortSignal.timeout(60000) }).catch(() => {});
+}
 async function probeWallet() {
   if (!WALLET_URL || !WALLET_KEY) { console.log('[wallet] WALLET_API_URL বা WALLET_API_KEY সেট করা নেই'); return; }
   try {
@@ -414,18 +440,16 @@ async function probeWallet() {
     console.log('[wallet] সংযোগ পরীক্ষা: HTTP ' + p.status + ({ 400: ' (ঠিক আছে)', 401: ' (কী মেলেনি)', 404: ' (ওয়ালেটে earnhub.js লোড হয়নি বা ঠিকানা ভুল)' }[p.status] || ''));
   } catch (e) { console.error('[wallet] সংযোগ পরীক্ষা ব্যর্থ: ' + e.message); }
 }
-
-// প্রথম চেষ্টায় না পৌঁছালে প্রতি ২০ সেকেন্ডে আবার পাঠানো (৫০ সেকেন্ডের পুরনো রিকোয়েস্ট থেকে, যাতে প্রথম চেষ্টার সাথে ধাক্কা না লাগে)
 let retrying = false;
 setInterval(async () => {
   if (retrying || mongoose.connection.readyState !== 1) return;
   retrying = true;
   try {
-    const list = await Req.find({ walletSent: false, status: 'pending', createdAt: { $lt: new Date(Date.now() - 50000) } }).limit(20);
+    const list = await Req.find({ walletSent: false, status: 'pending', createdAt: { $lt: new Date(Date.now() - 200000) } }).limit(20);
     for (const r of list) await sendToWallet(r, 40000);
   } catch (e) { console.error('retry error: ' + e.message); }
   retrying = false;
-}, 20000);
+}, 60000);
 
 app.get('/api/wallet-check', limit(6, 60000), ah(async (req, res) => {
   const out = { db: dbState, urlSet: !!WALLET_URL, keySet: !!WALLET_KEY, secretSet: !!WALLET_SECRET };
@@ -459,6 +483,7 @@ app.get('/api/wallet-check', limit(6, 60000), ah(async (req, res) => {
 
 // ================= ডিপোজিট / উইথড্র =================
 app.post('/api/deposit', needDb, auth, limit(10, 60000), ah(async (req, res) => {
+  wakeWallet();
   const { amount, method, trx } = req.body || {};
   const a = Number(amount);
   const u = req.user;
@@ -478,8 +503,7 @@ app.post('/api/deposit', needDb, auth, limit(10, 60000), ah(async (req, res) => 
     if (e.code === 11000) return res.status(409).json({ ok: false, msg: 'এই Transaction ID আগেই ব্যবহার হয়েছে।' });
     throw e;
   }
-  // ওয়ালেট ঘুমিয়ে থাকলে জাগতে সময় লাগে, তাই পেছনে পাঠানো হয়, ইউজারকে সাথে সাথে উত্তর দেওয়া হয়
-  sendToWallet(r, 45000).catch(() => {});
+  deliver(r).catch(() => {});
   res.json({ ok: true, id: r._id, status: r.status });
 }));
 
@@ -504,11 +528,10 @@ app.post('/api/withdraw', needDb, auth, onlySite('free'), limit(10, 60000), ah(a
     });
   } finally { session.endSession(); }
   if (!doc) return res.status(400).json({ ok: false, msg: 'ব্যালেন্স যথেষ্ট নয়।' });
-  sendToWallet(doc, 45000).catch(() => {});
+  deliver(doc).catch(() => {});
   res.json({ ok: true, id: doc._id, status: doc.status });
 }));
 
-// ইউজার শুধু pending / approved / rejected দেখে (ভেতরের কোনো সংযোগের বার্তা নয়)
 app.get('/api/requests', needDb, auth, ah(async (req, res) => {
   const list = await Req.find({ user: req.user._id }).sort({ createdAt: -1 }).limit(50);
   res.json({ ok: true, items: list.map((r) => ({ id: r._id, type: r.type, amount: r.amount, method: r.method, reference: r.reference, status: r.status, createdAt: r.createdAt })) });
@@ -521,15 +544,21 @@ app.get('/api/live', needDb, ah(async (req, res) => {
 }));
 
 // ================= Free Income: আয় (সব হিসাব সার্ভারে) =================
-// ব্যালেন্স বদলানো + খাতায় লেখা + রেফারেল কমিশন
-async function earnLog(userDoc, amount, kind, note) {
-  await Ledger.create({ user: userDoc._id, delta: amount, kind, note, earn: true });
+// আয়ের হিসাব: taka হলে balance, red হলে রেড ডায়মন্ড। earn সবসময় টাকার সমান মানে জমা হয় (লেভেল ও র‍্যাংকের জন্য)
+function incFor(cur, amt, cfg) {
+  if (cur === 'red') return { red: amt, earn: amt / (Number(cfg.ex.redPer) || 1) };
+  return { balance: amt, earn: amt };
+}
+// খাতায় লেখা + রেফারেল কমিশন (একই মুদ্রায়)
+async function earnLog(userDoc, amount, kind, note, cur) {
+  cur = cur || 'taka';
+  await Ledger.create({ user: userDoc._id, delta: amount, kind, note, earn: true, cur });
   if (userDoc.referredBy) {
     const cfg = await getCfg();
     const c = Math.round(amount * (Number(cfg.ref.pct) || 0)) / 100;
     if (c > 0) {
-      await User.updateOne({ _id: userDoc.referredBy }, { $inc: { balance: c, earn: c } });
-      await Ledger.create({ user: userDoc.referredBy, delta: c, kind: 'refcom', note: userDoc.username, earn: true });
+      await User.updateOne({ _id: userDoc.referredBy }, { $inc: incFor(cur, c, cfg) });
+      await Ledger.create({ user: userDoc.referredBy, delta: c, kind: 'refcom', note: userDoc.username, earn: true, cur });
     }
   }
 }
@@ -603,12 +632,12 @@ app.post('/api/bonus/claim', needDb, auth, onlySite('free'), limit(30, 60000), a
   const since = new Date(Date.now() - Number(b.h) * 36e5);
   const done = await User.findOneAndUpdate(
     { _id: u._id, $or: [{ [f]: { $exists: false } }, { [f]: null }, { [f]: { $lte: since } }] },
-    { $set: { [f]: new Date() }, $inc: { balance: Number(b.v), earn: Number(b.v) } },
+    { $set: { [f]: new Date() }, $inc: incFor('red', Number(b.v), cfg) },
     { new: true }
   );
   if (!done) return res.status(400).json({ ok: false, msg: 'এই বোনাস এখনো নেওয়ার সময় হয়নি।' });
-  await earnLog(done, Number(b.v), 'bonus', key);
-  res.json({ ok: true, reward: Number(b.v), balance: done.balance });
+  await earnLog(done, Number(b.v), 'bonus', key, 'red');
+  res.json({ ok: true, reward: Number(b.v), balance: done.balance, red: done.red });
 }));
 
 app.post('/api/spin', needDb, auth, onlySite('free'), limit(10, 60000), ah(async (req, res) => {
@@ -624,12 +653,12 @@ app.post('/api/spin', needDb, auth, onlySite('free'), limit(10, 60000), ah(async
   const day = dayKey();
   const done = await User.findOneAndUpdate(
     { _id: u._id, spinDay: { $ne: day } },
-    { $set: { spinDay: day }, $inc: { balance: val, earn: val } },
+    { $set: { spinDay: day }, $inc: incFor('red', val, cfg) },
     { new: true }
   );
   if (!done) return res.status(400).json({ ok: false, msg: 'আজকের স্পিন শেষ, কাল আবার চেষ্টা করুন।' });
-  await earnLog(done, val, 'spin', String(idx));
-  res.json({ ok: true, index: idx, value: val, balance: done.balance });
+  await earnLog(done, val, 'spin', String(idx), 'red');
+  res.json({ ok: true, index: idx, value: val, balance: done.balance, red: done.red });
 }));
 
 app.post('/api/package/buy', needDb, auth, onlySite('free'), limit(10, 60000), ah(async (req, res) => {
@@ -649,6 +678,38 @@ app.post('/api/package/buy', needDb, auth, onlySite('free'), limit(10, 60000), a
   res.json({ ok: true, pkg: idx, balance: done.balance });
 }));
 
+// এক্সচেঞ্জ: রেড বা ব্ল্যাক ডায়মন্ড থেকে আসল টাকায় (সীমা ও নিয়ম সার্ভারে যাচাই হয়)
+app.post('/api/exchange', needDb, auth, onlySite('free'), limit(20, 60000), ah(async (req, res) => {
+  const { from, amount } = req.body || {};
+  const u = req.user;
+  const cfg = await getCfg();
+  const ex = cfg.ex;
+  if (!ex.on) return res.status(400).json({ ok: false, msg: 'এক্সচেঞ্জ এখন বন্ধ আছে।' });
+  if (!['red', 'black'].includes(from)) return res.status(400).json({ ok: false, msg: 'কোন ডায়মন্ড বদলাবেন বেছে নিন।' });
+  const a = Math.floor(Number(amount));
+  const per = Number(from === 'red' ? ex.redPer : ex.blackPer) || 1;
+  const min = Number(from === 'red' ? ex.minRed : ex.minBlack) || 1;
+  if (!(a >= min)) return res.status(400).json({ ok: false, msg: 'কমপক্ষে ' + min + ' ডায়মন্ড এক্সচেঞ্জ করতে হবে।' });
+  const ageH = (Date.now() - new Date(u.createdAt).getTime()) / 36e5;
+  if (ageH < (Number(ex.minAgeHours) || 0)) return res.status(403).json({ ok: false, msg: 'অ্যাকাউন্ট খোলার ' + ex.minAgeHours + ' ঘণ্টা পর এক্সচেঞ্জ করা যাবে।' });
+  const taka = round2(a / per);
+  if (!(taka > 0)) return res.status(400).json({ ok: false, msg: 'পরিমাণ খুব কম।' });
+  const day = dayKey();
+  const cap = Number(ex.capTaka) || 0;
+  await User.updateOne({ _id: u._id, 'exToday.d': { $ne: day } }, { $set: { exToday: { d: day, taka: 0 } } });
+  const done = await User.findOneAndUpdate(
+    { _id: u._id, [from]: { $gte: a }, 'exToday.d': day, 'exToday.taka': { $lte: cap - taka } },
+    { $inc: { [from]: -a, balance: taka, 'exToday.taka': taka } },
+    { new: true }
+  );
+  if (!done) return res.status(400).json({ ok: false, msg: 'ডায়মন্ড কম, অথবা আজকের এক্সচেঞ্জ সীমা (৳' + cap + ') পার হয়ে যাবে।' });
+  await Ledger.create([
+    { user: u._id, delta: -a, kind: 'exchange', cur: from, note: '৳' + taka },
+    { user: u._id, delta: taka, kind: 'exchange', cur: 'taka', note: from + ' ' + a }
+  ]);
+  res.json({ ok: true, taka, balance: done.balance, red: done.red || 0, black: done.black || 0, exUsed: done.exToday.taka });
+}));
+
 app.post('/api/photo', needDb, auth, limit(10, 60000), ah(async (req, res) => {
   const d = String((req.body || {}).data || '');
   if (d.length > 120000 || !/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(d)) {
@@ -664,13 +725,19 @@ app.get('/api/ranking', needDb, auth, onlySite('free'), limit(30, 60000), ah(asy
   const days = range === 'week' ? 7 : range === 'month' ? 30 : 0;
   const match = { earn: true };
   if (days) match.at = { $gte: new Date(Date.now() - days * 864e5) };
-  const rows = await Ledger.aggregate([{ $match: match }, { $group: { _id: '$user', total: { $sum: '$delta' } } }, { $sort: { total: -1 } }, { $limit: 10 }]);
+  const cfgR = await getCfg();
+  // রেড/ব্ল্যাক ডায়মন্ডের আয় টাকার সমান মানে ধরে র‍্যাংক হয়
+  const conv = { $switch: { branches: [
+    { case: { $eq: ['$cur', 'red'] }, then: { $divide: ['$delta', Number(cfgR.ex.redPer) || 1] } },
+    { case: { $eq: ['$cur', 'black'] }, then: { $divide: ['$delta', Number(cfgR.ex.blackPer) || 1] } }
+  ], default: '$delta' } };
+  const rows = await Ledger.aggregate([{ $match: match }, { $group: { _id: '$user', total: { $sum: conv } } }, { $sort: { total: -1 } }, { $limit: 10 }]);
   const us = await User.find({ _id: { $in: rows.map((r) => r._id) } }).select('username photo');
   const byId = {};
   us.forEach((x) => { byId[String(x._id)] = x; });
-  const mine = await Ledger.aggregate([{ $match: Object.assign({ user: req.user._id }, match) }, { $group: { _id: '$user', total: { $sum: '$delta' } } }]);
+  const mine = await Ledger.aggregate([{ $match: Object.assign({ user: req.user._id }, match) }, { $group: { _id: '$user', total: { $sum: conv } } }]);
   const my = mine.length ? mine[0].total : 0;
-  const above = await Ledger.aggregate([{ $match: match }, { $group: { _id: '$user', total: { $sum: '$delta' } } }, { $match: { total: { $gt: my } } }, { $count: 'n' }]);
+  const above = await Ledger.aggregate([{ $match: match }, { $group: { _id: '$user', total: { $sum: conv } } }, { $match: { total: { $gt: my } } }, { $count: 'n' }]);
   res.json({
     ok: true,
     top: rows.map((r) => { const x = byId[String(r._id)]; return { name: x ? mask(x.username) : '—', total: round2(r.total), me: String(r._id) === String(req.user._id) }; }),
