@@ -111,6 +111,12 @@ nav.tab button.on{color:var(--mg)}
 .ov{position:fixed;inset:0;background:#020312dd;display:none;align-items:center;justify-content:center;z-index:25;padding:20px}
 .ov.on{display:flex}
 .mb{width:100%;max-width:380px;background:#181b4a;border:1px solid var(--line);border-radius:22px;padding:22px;text-align:center}
+.wbar{display:flex;align-items:center;gap:8px;margin:0 0 10px;overflow-x:auto;scrollbar-width:none}
+.wbar::-webkit-scrollbar{display:none}
+.rs{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font:800 13px Sora,sans-serif;color:#7a4a00;background:radial-gradient(circle at 32% 28%,#fff3b0,var(--gd) 55%,#c98a00);box-shadow:0 0 0 3px #e0a90055}
+.chip{flex:none;display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 11px;font:700 14px Sora,sans-serif;cursor:pointer}
+.chip.r{color:#ff6b8a}.chip.b{color:#fff;background:#111;border-color:#ffffff44}.chip.t{color:var(--gd)}
+.exb{flex:none;border:0;border-radius:12px;padding:8px 12px;font:600 13px "Hind Siliguri",sans-serif;color:#06112a;background:linear-gradient(180deg,#6ff3f5,var(--cy));cursor:pointer}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -119,7 +125,6 @@ nav.tab button.on{color:var(--mg)}
   <header>
     <div class="logo">Earn<b>Hub</b> <span class="mut" style="font:500 13px 'Hind Siliguri'">Free Income</span></div>
     <div class="hr">
-      <div class="bal" id="bal">৳0</div>
       <button class="dots" id="dots" aria-label="মেনু">⋮</button>
       <div class="menu" id="menu"><div class="ms" id="msum"></div>
         <button data-go="pack"><span class="mi">💎</span>প্যাকেজ</button>
@@ -129,6 +134,7 @@ nav.tab button.on{color:var(--mg)}
       </div>
     </div>
   </header>
+  <div class="wbar" id="wbar"><div class="rs">RS</div><div class="chip r" id="cr" data-ex="red">♦ 0</div><div class="chip b" id="cb" data-ex="black">♦ 0</div><div class="chip t" id="ct">৳0</div><button class="exb" data-ex="red">⇄ এক্সচেঞ্জ</button></div>
   <main id="view"><div class="mut" style="text-align:center;padding:40px 0">লোড হচ্ছে...</div></main>
 </div>
 <nav class="tab"><div>
@@ -140,6 +146,7 @@ nav.tab button.on{color:var(--mg)}
 </div></nav>
 <div class="toast" id="toast" role="status"></div>
 <div class="ov" id="ov"><div class="mb"><h3>টাস্ক চলছে</h3><p class="mut" id="mp"></p><a class="btn full" id="ml" href="#" target="_blank" rel="noopener">অফিসিয়াল লিংক খুলুন</a><div class="bar"><i id="mbar"></i></div><div class="tot" id="mc">10</div><button class="btn gd full" id="mclaim" style="margin-top:14px" disabled>রিওয়ার্ড নিন</button><button class="btn sm ghost" id="mx" style="margin-top:12px">বাতিল</button></div></div>
+<div class="ov" id="xo"><div class="mb" style="text-align:left"><h3 style="margin-bottom:6px">⇄ এক্সচেঞ্জ</h3><div class="mut" id="xi"></div><div class="pay" id="xs"><button data-xf="red">♦ রেড</button><button data-xf="black">♦ ব্ল্যাক</button></div><label>কত ডায়মন্ড বদলাবেন</label><input id="xa" type="number" inputmode="numeric" placeholder="পরিমাণ"><div class="row" style="margin-top:8px"><span class="mut">পাবেন</span><b class="tot" id="xt">৳0</b></div><div class="err" id="xe"></div><button class="btn gd full" id="xg">এক্সচেঞ্জ করুন</button><button class="btn sm ghost" id="xc" style="margin-top:10px">বন্ধ করুন</button></div></div>
 
 <script>
 (function(){
@@ -162,7 +169,21 @@ async function api(p,b){
   return d;
 }
 function pk(){return ST.cfg.pk[ST.user.pkg]||ST.cfg.pk[0]}
-function head(){$('#bal').textContent='৳'+fm(ST.user.balance)}
+function head(){var u=ST.user;$('#cr').textContent='♦ '+fm(u.red);$('#cb').textContent='♦ '+fm(u.black);$('#ct').textContent='৳'+fm(u.balance)}
+var xf='red';
+function exInfo(){
+  var ex=ST.cfg.ex,u=ST.user,per=Number(xf==='red'?ex.redPer:ex.blackPer)||1,min=xf==='red'?ex.minRed:ex.minBlack,have=xf==='red'?u.red:u.black;
+  $('#xi').innerHTML='১ ডায়মন্ড = ৳'+fm(1/per)+' · কমপক্ষে '+min+' ডায়মন্ড · আজ ৳'+fm(ST.exUsed)+'/'+fm(ex.capTaka)+' এক্সচেঞ্জ হয়েছে<br>আপনার '+(xf==='red'?'রেড':'ব্ল্যাক')+' ডায়মন্ড: <b>'+fm(have)+'</b>';
+  document.querySelectorAll('#xs button').forEach(function(b){b.classList.toggle('on',b.dataset.xf===xf)});
+  var a=Math.floor(Number($('#xa').value)||0);$('#xt').textContent='৳'+fm(a/per);
+}
+function openEx(f){if(!ST)return;xf=f||'red';$('#xa').value='';$('#xe').textContent='';$('#xo').classList.add('on');exInfo()}
+async function doEx(){
+  var b=$('#xg'),e=$('#xe');e.textContent='';b.disabled=true;
+  try{var r=await api('/api/exchange',{from:xf,amount:Number($('#xa').value)});$('#xo').classList.remove('on');toast('৳'+fm(r.taka)+' ব্যালেন্সে যোগ হয়েছে');await load();go(page)}
+  catch(x){e.textContent=x.message}
+  b.disabled=false;
+}
 function av(){return ST.user.photo?'<img src="'+esc(ST.user.photo)+'" alt="প্রোফাইল ছবি" style="width:100%;height:100%;object-fit:cover">':'👤'}
 function cnt(){return (ST.today.tasks||[]).length}
 function msum(){
@@ -185,11 +206,11 @@ function home(){
   ban.forEach(function(b,i){h+='<button class="sl'+(i?'':' on')+'" data-go="promo" style="background:'+GR[b.c%4]+'"><span class="tag">স্পনসর</span><b>'+esc(b.t)+'</b><span>'+esc(b.d)+'</span></button>'});
   h+='</div><div class="dts" id="dts">'+ban.map(function(b,i){return '<i class="'+(i?'':'on')+'"></i>'}).join('')+'</div>';
   h+='<div class="quick"><button data-go="pack"><span>💎</span>প্যাকেজ</button><button data-go="support"><span>🎧</span>কাস্টমার কেয়ার</button><button data-go="ref"><span>🤝</span>রেফারেল</button><button data-go="about"><span>ℹ️</span>About</button></div>';
-  h+='<h3 class="sec">ফ্রি লাকি স্পিন</h3><div class="wheelbox"><div class="ptr"></div><canvas id="wh" width="600" height="600"></canvas><div class="hub">৳</div></div><button class="btn mg full" id="sp"'+(ST.spinToday?' disabled':'')+'>'+(ST.spinToday?'আজকের স্পিন শেষ, কাল আবার':'স্পিন করুন')+'</button>';
+  h+='<h3 class="sec">ফ্রি লাকি স্পিন</h3><div class="wheelbox"><div class="ptr"></div><canvas id="wh" width="600" height="600"></canvas><div class="hub">♦</div></div><button class="btn mg full" id="sp"'+(ST.spinToday?' disabled':'')+'>'+(ST.spinToday?'আজকের স্পিন শেষ, কাল আবার':'স্পিন করুন')+'</button>';
   h+='<h3 class="sec">বোনাস</h3><div class="grid">';
-  (c.bn||[]).filter(function(b){return b.k!=='vip'}).forEach(function(b){var r=left(b.k,b.h);h+='<div class="bn"><div class="e">'+(BI[b.k]||'🎁')+'</div><b>'+esc(b.n)+'</b><div class="mut">৳'+fm(b.v)+'</div><button class="btn sm" data-bn="'+b.k+'"'+(r>0?' disabled':'')+'>'+(r>0?fmt(r)+' পরে':'নিন')+'</button></div>'});
+  (c.bn||[]).filter(function(b){return b.k!=='vip'}).forEach(function(b){var r=left(b.k,b.h);h+='<div class="bn"><div class="e">'+(BI[b.k]||'🎁')+'</div><b>'+esc(b.n)+'</b><div class="mut">♦ '+fm(b.v)+' রেড ডায়মন্ড</div><button class="btn sm" data-bn="'+b.k+'"'+(r>0?' disabled':'')+'>'+(r>0?fmt(r)+' পরে':'নিন')+'</button></div>'});
   var vb=(c.bn||[]).filter(function(b){return b.k==='vip'})[0];
-  if(vb){var vr=left('vip',vb.h),ok=u.pkg>=c.vipMin;h+='<div class="bn vip"><div class="e">👑</div><div><b>'+esc(vb.n)+'</b><div class="mut" style="margin:0">৳'+fm(vb.v)+(ok?'':' · '+esc(c.pk[c.vipMin].n)+' প্যাকেজ লাগবে')+'</div></div><button class="btn gd sm" data-bn="vip"'+((vr>0||!ok)?' disabled':'')+'>'+(vr>0?fmt(vr)+' পরে':'নিন')+'</button></div>'}
+  if(vb){var vr=left('vip',vb.h),ok=u.pkg>=c.vipMin;h+='<div class="bn vip"><div class="e">👑</div><div><b>'+esc(vb.n)+'</b><div class="mut" style="margin:0">♦ '+fm(vb.v)+' রেড ডায়মন্ড'+(ok?'':' · '+esc(c.pk[c.vipMin].n)+' প্যাকেজ লাগবে')+'</div></div><button class="btn gd sm" data-bn="vip"'+((vr>0||!ok)?' disabled':'')+'>'+(vr>0?fmt(vr)+' পরে':'নিন')+'</button></div>'}
   h+='</div><h3 class="sec"><span class="dot" style="margin-right:8px"></span>লাইভ ট্রানজ্যাকশন</h3><div class="card feed" id="feed" aria-live="polite"><div class="mut">লোড হচ্ছে...</div></div>';
   h+='<h3 class="sec">About</h3><div class="card mut">EarnHub-এ ছোট কাজ করে আয়ের সুযোগ।</div>';
   V.innerHTML=h;draw();feed();
@@ -207,19 +228,19 @@ async function feed(){
 function draw(){
   var c=$('#wh');if(!c)return;var v=ST.cfg.wv,n=v.length,x=c.getContext('2d'),r=300,a=Math.PI*2/n,cols=['#c2268a','#3b1c8f'];
   for(var i=0;i<n;i++){x.beginPath();x.moveTo(r,r);x.arc(r,r,r,-Math.PI/2+i*a,-Math.PI/2+(i+1)*a);x.fillStyle=v[i]>=50?'#e0a900':cols[i%2];x.fill();x.strokeStyle='#ffffff55';x.lineWidth=2;x.stroke();
-    x.save();x.translate(r,r);x.rotate(-Math.PI/2+(i+.5)*a);x.fillStyle='#fff';x.font='700 34px Sora,sans-serif';x.textAlign='right';x.fillText('৳'+v[i],r-26,12);x.restore()}
+    x.save();x.translate(r,r);x.rotate(-Math.PI/2+(i+.5)*a);x.fillStyle='#fff';x.font='700 34px Sora,sans-serif';x.textAlign='right';x.fillText('♦'+v[i],r-26,12);x.restore()}
 }
 async function doSpin(){
   if(spinning)return;spinning=true;$('#sp').disabled=true;
   try{
     var r=await api('/api/spin',{}),n=ST.cfg.wv.length,seg=360/n,ctr=r.index*seg+seg/2;
     rot=rot-(rot%360)+360*6+(360-ctr);$('#wh').style.transform='rotate('+rot+'deg)';
-    setTimeout(async function(){spinning=false;toast('অভিনন্দন! ৳'+fm(r.value)+' জিতেছেন');await load();go('home')},5200);
+    setTimeout(async function(){spinning=false;toast('অভিনন্দন! ♦'+fm(r.value)+' রেড ডায়মন্ড জিতেছেন');await load();go('home')},5200);
   }catch(e){spinning=false;$('#sp').disabled=false;toast(e.message,true)}
 }
 async function claimBonus(k){
   if(busy)return;busy=true;
-  try{var r=await api('/api/bonus/claim',{key:k});toast('৳'+fm(r.reward)+' বোনাস পেয়েছেন');await load();go('home')}
+  try{var r=await api('/api/bonus/claim',{key:k});toast('♦'+fm(r.reward)+' রেড ডায়মন্ড পেয়েছেন');await load();go('home')}
   catch(e){toast(e.message,true)}
   busy=false;
 }
@@ -264,6 +285,7 @@ $('#mclaim').onclick=async function(){
   catch(e){toast(e.message,true);$('#ov').classList.remove('on')}
 };
 $('#mx').onclick=function(){clearInterval(tm);$('#ov').classList.remove('on')};
+$('#xa').oninput=exInfo;$('#xg').onclick=doEx;$('#xc').onclick=function(){$('#xo').classList.remove('on')};
 
 /* ---------- প্যাকেজ ---------- */
 function pack(){
@@ -312,7 +334,7 @@ function support(){
 function acc(){
   var u=ST.user,c=ST.cfg,p=pk(),n=cnt(),pc=Math.min(100,n/p.lim*100);
   var h='<div class="card"><div class="row" style="justify-content:flex-start;gap:14px"><div class="pav">'+av()+'</div><div><b>'+esc(u.username)+'</b> <span class="mut"><span class="dot"></span> লাইভ</span><div class="mut">'+esc(p.n)+' প্যাকেজ</div><label class="btn sm" style="display:inline-block;margin-top:6px;cursor:pointer">ছবি যোগ করুন<input type="file" accept="image/*" id="pf" hidden></label></div></div><div class="bar"><i style="width:'+pc+'%;transition:none"></i></div><div class="grid" style="grid-template-columns:repeat(3,1fr)"><div class="mini"><b style="color:var(--ok)">'+n+'</b><span class="mut">আজ টাস্ক শেষ</span></div><div class="mini"><b style="color:var(--gd)">'+Math.max(0,p.lim-n)+'</b><span class="mut">টাস্ক বাকি</span></div><div class="mini"><b>'+ST.today.promos.length+'</b><span class="mut">প্রমোশন শেষ</span></div><div class="mini"><b style="color:var(--gd)">'+ST.pendingRequests+'</b><span class="mut">পেন্ডিং রিকোয়েস্ট</span></div><div class="mini"><b style="color:var(--cy)">৳'+fm(ST.today.earned)+'</b><span class="mut">আজকের আয়</span></div><div class="mini"><b>৳'+fm(u.earn)+'</b><span class="mut">মোট আয়</span></div></div></div>';
-  h+='<div class="card"><div class="mut">ব্যালেন্স</div><div class="tot">৳'+fm(u.balance)+'</div></div><div class="tabs"><button data-wt="dep" class="'+(wt==='dep'?'on':'')+'">ডিপোজিট</button><button data-wt="wd" class="'+(wt==='wd'?'on':'')+'">উইথড্র</button></div><div class="card"><div class="pay"><button data-pm="bKash" class="'+(pm==='bKash'?'on':'')+'">bKash</button><button data-pm="Nagad" class="'+(pm==='Nagad'?'on':'')+'">Nagad</button></div>';
+  h+='<div class="card"><div class="mut">আপনার ব্যালেন্স</div><div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:8px"><div class="mini"><b style="color:#ff6b8a">♦ '+fm(u.red)+'</b><span class="mut">রেড ডায়মন্ড</span></div><div class="mini"><b>♦ '+fm(u.black)+'</b><span class="mut">ব্ল্যাক ডায়মন্ড</span></div><div class="mini"><b style="color:var(--gd)">৳'+fm(u.balance)+'</b><span class="mut">আসল টাকা</span></div></div><button class="btn gd full" data-ex="red" style="margin-top:12px">⇄ এক্সচেঞ্জ (ডায়মন্ড থেকে টাকা)</button></div><div class="tabs"><button data-wt="dep" class="'+(wt==='dep'?'on':'')+'">ডিপোজিট</button><button data-wt="wd" class="'+(wt==='wd'?'on':'')+'">উইথড্র</button></div><div class="card"><div class="pay"><button data-pm="bKash" class="'+(pm==='bKash'?'on':'')+'">bKash</button><button data-pm="Nagad" class="'+(pm==='Nagad'?'on':'')+'">Nagad</button></div>';
   var num=pm==='bKash'?c.set.bk:c.set.ng;
   if(wt==='dep')h+='<div class="mut">এই নাম্বারে Send Money করুন:</div><div class="num">'+esc(num)+'</div><label>পরিমাণ (৳)</label><input id="wa" type="number" inputmode="numeric" placeholder="কমপক্ষে '+(c.set.mindep||50)+'"><label>Transaction ID</label><input id="wx" autocapitalize="characters"><div class="err" id="we"></div><button class="btn full" id="wb">ডিপোজিট সাবমিট</button>';
   else h+='<label>আপনার '+pm+' নাম্বার</label><input id="wx" type="tel" inputmode="tel" placeholder="01XXXXXXXXX"><label>পরিমাণ (৳, কমপক্ষে '+(c.set.minwd||200)+')</label><input id="wa" type="number" inputmode="numeric"><div class="err" id="we"></div><button class="btn full" id="wb">উইথড্র রিকোয়েস্ট</button>';
@@ -327,7 +349,7 @@ async function hist(){
   var e=$('#hist');if(!e)return;
   try{
     var d=await api('/api/requests');
-    e.innerHTML=d.items.length?d.items.map(function(x){var cls=x.status==='approved'?'done':(x.status==='rejected'?'bad':'pend'),tx=x.status==='approved'?'গৃহীত':(x.status==='rejected'?'বাতিল':(x.status==='pending'?'অপেক্ষমাণ':x.status));
+    e.innerHTML=d.items.length?d.items.map(function(x){var cls=x.status==='approved'?'done':(x.status==='rejected'?'bad':'pend'),tx=x.status==='approved'?'গৃহীত':(x.status==='rejected'?'বাতিল':'অপেক্ষমাণ');
       return '<div class="card"><div class="row"><b>'+(x.type==='deposit'?'ডিপোজিট':'উইথড্র')+' ৳'+fm(x.amount)+'</b><span class="badge '+cls+'">'+esc(tx)+'</span></div><div class="mut">'+esc(x.method)+' · '+esc(x.reference)+' · '+dt(x.createdAt)+'</div></div>'}).join(''):'<div class="card mut">কোনো হিস্টোরি নেই।</div>';
   }catch(x){e.innerHTML='<div class="card mut">'+esc(x.message)+'</div>'}
 }
@@ -357,6 +379,8 @@ function go(n){
 }
 document.addEventListener('click',function(e){
   var t;
+  if((t=e.target.closest('[data-xf]'))){xf=t.dataset.xf;exInfo();return}
+  if((t=e.target.closest('[data-ex]'))){openEx(t.dataset.ex);return}
   if((t=e.target.closest('[data-go]'))){go(t.dataset.go);return}
   if((t=e.target.closest('[data-tk]'))){begin(t.dataset.tk);return}
   if((t=e.target.closest('[data-bn]'))){claimBonus(t.dataset.bn);return}
