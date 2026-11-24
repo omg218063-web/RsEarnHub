@@ -832,7 +832,12 @@ try {
 } catch (e) {
   console.error('[অ্যাডমিন API] চালু হয়নি (admin-api.js আছে কিনা দেখুন): ' + e.message);
 }
-
+// ================= গেম টুর্নামেন্ট API (games-api.js ফাইল থাকলে চালু হয়) =================
+try {
+  require('./games-api')(app, { mongoose, User, Ledger, Config, getCfg, auth, onlySite, limit, needDb, ah, dayKey, mask, incFor });
+} catch (e) {
+  console.error('[গেম API] চালু হয়নি (games-api.js আছে কিনা দেখুন): ' + e.message);
+}
 // ================= পেজ =================
 function page(name, inject) {
   return (req, res) => {
