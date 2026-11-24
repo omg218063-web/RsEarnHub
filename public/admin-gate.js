@@ -96,4 +96,14 @@
     new MutationObserver(check).observe(view, { childList: true });
     check();
   }
+
+  // Free Income সাইটে গেম টুর্নামেন্টের ভাসমান বাটন
+  var pth = location.pathname.replace(/\/$/, '');
+  if (pth === '/free' || pth === '/free.html') {
+    var gb = document.createElement('a');
+    gb.href = '/games.html';
+    gb.textContent = '🎮 গেম';
+    gb.style.cssText = 'position:fixed;right:14px;bottom:calc(92px + env(safe-area-inset-bottom,0px));z-index:12;background:linear-gradient(180deg,#ff72b8,#ff3d9a);color:#fff;font:700 15px "Hind Siliguri",sans-serif;padding:12px 18px;border-radius:99px;text-decoration:none;box-shadow:0 5px 0 #a3185f,0 10px 20px #0008';
+    document.body.appendChild(gb);
+  }
 })();
