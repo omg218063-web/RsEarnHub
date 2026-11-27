@@ -1,12 +1,22 @@
 {
-  "name": "earnhub",
-  "version": "0.1.0",
+  "name": "rs-pay",
+  "version": "2.0.0",
   "private": true,
+  "description": "RS PAY - mobile recharge, data/minute packs, Free Fire top-up and bill pay platform",
   "main": "server.js",
-  "scripts": { "start": "node server.js" },
-  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
-    "express": "^4.19.2",
-    "mongoose": "^8.5.1"
+    "bcryptjs": "^2.4.3",
+    "connect-mongo": "^5.1.0",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
+    "mongoose": "^8.9.5"
   }
 }
