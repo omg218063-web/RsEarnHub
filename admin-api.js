@@ -1,4 +1,7 @@
 // admin-api.js - আসল অ্যাডমিন প্যানেলের সার্ভার অংশ (শুধু অ্যাডমিন পাসওয়ার্ড দিয়ে ঢুকলে কাজ করে)
+const fs = require('fs');
+const path = require('path');
+
 module.exports = function (app, d) {
   const { mongoose, User, Ledger, Order, Custom, Support, Config, getCfg, validAdminToken, getCookie, ah, needDb } = d;
 
@@ -6,11 +9,27 @@ module.exports = function (app, d) {
     if (validAdminToken(getCookie(req, 'eh_admin'))) return next();
     res.status(401).json({ ok: false, msg: 'অ্যাডমিন হিসেবে আবার লগইন করুন।' });
   }
+  function adminPage(req, res, next) {
+    if (validAdminToken(getCookie(req, 'eh_admin'))) return next();
+    res.redirect('/');
+  }
   const guard = [needDb, adminApi];
   const rxEsc = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const round2 = (n) => Math.round(n * 100) / 100;
   const dayStart = () => new Date(new Date(Date.now() + 6 * 36e5).toISOString().slice(0, 10) + 'T00:00:00+06:00');
   const STATUSES = ['Pending', 'Processing', 'Completed', 'Cancelled'];
+  const pubDir = path.join(__dirname, 'public');
+
+  // ---------- অ্যাডমিন পেজ (উপরের মেনুতে 🎮 গেম বাটন নিজে বসে) ----------
+  app.get(['/admin', '/admin.html'], adminPage, (req, res) => {
+    fs.readFile(path.join(pubDir, 'admin.html'), 'utf8', (err, html) => {
+      if (err) return res.status(404).send('admin.html পাওয়া যায়নি');
+      res.type('html').send(html.replace('</body>', '<script src="/admin-extra.js"></script></body>'));
+    });
+  });
+  app.get(['/admin-games', '/admin-games.html'], adminPage, (req, res) => {
+    res.sendFile(path.join(pubDir, 'admin-games.html'));
+  });
 
   // ---------- ড্যাশবোর্ড ----------
   app.get('/api/admin/overview', guard, ah(async (req, res) => {
@@ -158,6 +177,56 @@ module.exports = function (app, d) {
     catch (e) { if (e.bad) return res.status(400).json({ ok: false, msg: e.message }); throw e; }
     await Config.updateOne({ key: 'main' }, { $set: { data: Object.assign({}, cur, clean) } }, { upsert: true });
     await getCfg(true);
+    res.json({ ok: true });
+  }));
+
+  // ---------- গেম টুর্নামেন্ট: সেটিং ও ছবি ----------
+  const GAME_IDS = ['memory', 'quiz', 'coin', 'tap'];
+  const GDEF = { on: true, attempts: 5, minPlays: 3, prizes: [100, 60, 40, 20, 20, 10, 10, 10, 10, 10], games: { memory: true, quiz: true, coin: true, tap: true } };
+  const imgS = new mongoose.Schema({ game: String, kind: String, data: String, v: Number });
+  imgS.index({ game: 1, kind: 1 }, { unique: true });
+  const GameImage = mongoose.models.GameImage || mongoose.model('GameImage', imgS);
+
+  app.get('/api/admin/games', guard, ah(async (req, res) => {
+    const row = await Config.findOne({ key: 'games' });
+    const cfg = Object.assign({}, GDEF, row && row.data ? row.data : {});
+    const images = {};
+    (await GameImage.find({}).select('game kind v')).forEach((x) => { (images[x.game] = images[x.game] || {})[x.kind] = x.v || 1; });
+    res.json({ ok: true, cfg, images });
+  }));
+
+  app.post('/api/admin/games-config', guard, ah(async (req, res) => {
+    const i = (req.body || {}).cfg || {};
+    let clean;
+    try {
+      const prizes = arr(i.prizes, 20).map((x) => num(x, 0, 1e6, 'পুরস্কার'));
+      if (!prizes.length) throw bad('কমপক্ষে একটা পুরস্কার দিন।');
+      const gm = i.games || {};
+      clean = {
+        on: i.on !== false,
+        attempts: Math.floor(num(i.attempts, 1, 50, 'দিনে খেলার সংখ্যা')),
+        minPlays: Math.floor(num(i.minPlays, 0, 50, 'ন্যূনতম খেলা')),
+        prizes,
+        games: { memory: gm.memory !== false, quiz: gm.quiz !== false, coin: gm.coin !== false, tap: gm.tap !== false }
+      };
+    } catch (e) { if (e.bad) return res.status(400).json({ ok: false, msg: e.message }); throw e; }
+    await Config.updateOne({ key: 'games' }, { $set: { data: clean } }, { upsert: true });
+    res.json({ ok: true });
+  }));
+
+  app.post('/api/admin/game-image', guard, ah(async (req, res) => {
+    const { game, kind, data } = req.body || {};
+    if (!GAME_IDS.includes(game) || !['cover', 'hero'].includes(kind)) return res.status(400).json({ ok: false, msg: 'গেম বা ছবির ধরন ঠিক নেই।' });
+    const s = String(data || '');
+    if (s.length > 190000 || !/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(s)) return res.status(400).json({ ok: false, msg: 'ছবি ঠিক নেই বা অনেক বড়।' });
+    await GameImage.updateOne({ game, kind }, { $set: { data: s, v: Date.now() } }, { upsert: true });
+    res.json({ ok: true });
+  }));
+
+  app.post('/api/admin/game-image-del', guard, ah(async (req, res) => {
+    const { game, kind } = req.body || {};
+    if (!GAME_IDS.includes(game) || !['cover', 'hero'].includes(kind)) return res.status(400).json({ ok: false });
+    await GameImage.deleteOne({ game, kind });
     res.json({ ok: true });
   }));
 
