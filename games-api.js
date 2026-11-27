@@ -133,26 +133,45 @@ module.exports = function (app, d) {
   const setS = new mongoose.Schema({ game: String, week: String, paid: Mixed, at: { type: Date, default: Date.now } });
   setS.index({ game: 1, week: 1 }, { unique: true });
   const Settled = mongoose.model('GameSettled', setS);
+  // গেমের ছবি (অ্যাডমিন থেকে বসানো): kind = cover (লবির কার্ডে) বা hero (গেমের ভেতরে)
+  const imgS = new mongoose.Schema({ game: String, kind: String, data: String, v: Number });
+  imgS.index({ game: 1, kind: 1 }, { unique: true });
+  const GameImage = mongoose.models.GameImage || mongoose.model('GameImage', imgS);
 
   const enabled = (g, c) => GAMES[g] && c.on && c.games[g] !== false;
   const rankOf = async (g, wk, best) => (await Score.countDocuments({ game: g, week: wk, best: { $gt: best } })) + 1;
 
-  // ---------- লবি: সব গেম, বাকি সুযোগ, নিজের সেরা স্কোর ----------
+  // ---------- গেমের ছবি (সবাই দেখতে পারে) ----------
+  app.get('/api/game/img/:game/:kind', needDb, async (req, res) => {
+    try {
+      const row = await GameImage.findOne({ game: req.params.game, kind: req.params.kind });
+      const m = row && /^data:(image\/(?:jpeg|png|webp));base64,(.+)$/.exec(row.data);
+      if (!m) return res.status(404).end();
+      res.set('Content-Type', m[1]);
+      res.set('Cache-Control', 'public, max-age=3600');
+      res.send(Buffer.from(m[2], 'base64'));
+    } catch (e) { res.status(500).end(); }
+  });
+
+  // ---------- লবি: সব গেম, বাকি সুযোগ, নিজের সেরা স্কোর, ছবি ----------
   app.get('/api/game/info', needDb, auth, onlySite('free'), limit(60, 60000), ah(async (req, res) => {
     settle().catch(() => {});
     const c = await gcfg();
     const day = dayKey(), wk = weekKey();
+    const imgs = {};
+    (await GameImage.find({}).select('game kind v')).forEach((x) => { (imgs[x.game] = imgs[x.game] || {})[x.kind] = x.v || 1; });
+    const ea = await Ledger.aggregate([{ $match: { user: req.user._id, kind: 'tournament', cur: 'red' } }, { $group: { _id: null, t: { $sum: '$delta' } } }]);
     const out = [];
     for (const g of Object.keys(GAMES)) {
       if (!enabled(g, c)) continue;
       const dd = await Day.findOne({ user: req.user._id, game: g, day });
       const mine = await Score.findOne({ game: g, week: wk, user: req.user._id });
-      out.push({ id: g, name: GAMES[g].name, icon: GAMES[g].icon, left: Math.max(0, c.attempts - (dd ? dd.n : 0)), best: mine ? mine.best : 0, plays: mine ? mine.plays : 0, rank: mine ? await rankOf(g, wk, mine.best) : null });
+      out.push({ id: g, name: GAMES[g].name, icon: GAMES[g].icon, left: Math.max(0, c.attempts - (dd ? dd.n : 0)), best: mine ? mine.best : 0, plays: mine ? mine.plays : 0, rank: mine ? await rankOf(g, wk, mine.best) : null, img: imgs[g] || {} });
     }
-    res.json({ ok: true, games: out, attempts: c.attempts, minPlays: c.minPlays, prizes: c.prizes, endsAt: weekEndMs() });
+    res.json({ ok: true, games: out, attempts: c.attempts, minPlays: c.minPlays, prizes: c.prizes, endsAt: weekEndMs(), earned: ea.length ? ea[0].t : 0 });
   }));
 
-  // ---------- লিডারবোর্ড ----------
+  // ---------- একটা গেমের লিডারবোর্ড ----------
   app.get('/api/game/board', needDb, auth, onlySite('free'), limit(60, 60000), ah(async (req, res) => {
     const g = String(req.query.game || '');
     if (!GAMES[g]) return res.status(400).json({ ok: false, msg: 'গেম পাওয়া যায়নি।' });
@@ -163,6 +182,31 @@ module.exports = function (app, d) {
       ok: true,
       top: top.map((x) => ({ name: mask(x.username), best: x.best, plays: x.plays, me: String(x.user) === String(req.user._id) })),
       me: mine ? { best: mine.best, plays: mine.plays, rank: await rankOf(g, wk, mine.best) } : null
+    });
+  }));
+
+  // ---------- প্রিমিয়াম র‍্যাংকিং: সব গেম মিলিয়ে বা আলাদা, এই সপ্তাহ বা সর্বকালের ----------
+  app.get('/api/game/ranking', needDb, auth, onlySite('free'), limit(60, 60000), ah(async (req, res) => {
+    const scope = req.query.scope === 'all' ? 'all' : 'week';
+    const g = String(req.query.game || 'all');
+    const m = {};
+    if (scope === 'week') m.week = weekKey();
+    if (g !== 'all') { if (!GAMES[g]) return res.status(400).json({ ok: false, msg: 'গেম পাওয়া যায়নি।' }); m.game = g; }
+    const grp = { $group: { _id: '$user', total: { $sum: '$best' }, plays: { $sum: '$plays' }, games: { $addToSet: '$game' } } };
+    const rows = await Score.aggregate([{ $match: m }, grp, { $sort: { total: -1 } }, { $limit: 20 }]);
+    const us = await User.find({ _id: { $in: rows.map((r) => r._id) } }).select('username');
+    const nm = {};
+    us.forEach((u) => { nm[String(u._id)] = u.username; });
+    const mine = await Score.aggregate([{ $match: Object.assign({ user: req.user._id }, m) }, grp]);
+    let me = null;
+    if (mine.length) {
+      const above = await Score.aggregate([{ $match: m }, grp, { $match: { total: { $gt: mine[0].total } } }, { $count: 'n' }]);
+      me = { total: mine[0].total, plays: mine[0].plays, rank: (above.length ? above[0].n : 0) + 1 };
+    }
+    res.json({
+      ok: true, scope, game: g,
+      top: rows.map((r) => ({ name: nm[String(r._id)] ? mask(nm[String(r._id)]) : '—', total: r.total, plays: r.plays, games: r.games.length, me: String(r._id) === String(req.user._id) })),
+      me
     });
   }));
 
