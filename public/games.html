@@ -6,63 +6,154 @@
 <title>EarnHub – গেম টুর্নামেন্ট</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@600;800&display=swap">
 <style>
-:root{--bg:#0a0b1e;--bg2:#12143a;--card:rgba(255,255,255,.06);--line:rgba(255,255,255,.12);--tx:#eef0ff;--mut:#9aa0cf;--cy:#2de2e6;--mg:#ff3d9a;--gd:#ffc93c;--ok:#4be38a;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+:root{--bg:#0a0b1e;--card:rgba(255,255,255,.07);--line:rgba(255,255,255,.14);--tx:#eef0ff;--mut:#a7acd8;--cy:#2de2e6;--mg:#ff3d9a;--gd:#ffc93c;--ok:#4be38a;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
 *,*:before,*:after{box-sizing:inherit}
-body{margin:0;background:radial-gradient(800px 460px at 85% -10%,#6e1a5a55,transparent),radial-gradient(600px 400px at -10% 40%,#0b5a7a33,transparent),var(--bg);color:var(--tx);font-family:"Hind Siliguri",system-ui,sans-serif;line-height:1.55;min-height:100vh;padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}
+body{margin:0;color:var(--tx);font-family:"Hind Siliguri",system-ui,sans-serif;line-height:1.55;min-height:100vh;padding-bottom:calc(40px + env(safe-area-inset-bottom,0px));background:linear-gradient(135deg,#0a0b1e,#1c0b40,#0b2a4a,#2a0b3a,#0a0b1e);background-size:400% 400%;animation:bg 18s ease infinite;overflow-x:hidden}
+@keyframes bg{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
 h1,h2,h3{font-family:Sora,"Hind Siliguri",sans-serif;margin:0}
-.app{max-width:560px;margin:0 auto;padding:0 16px}
-header{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
-.back{color:var(--tx);text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 14px;font-weight:600}
-.chip{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 12px;font:700 14px Sora,sans-serif;color:#ff6b8a}
-.btn{border:0;cursor:pointer;font:600 16px "Hind Siliguri",sans-serif;color:#06112a;padding:12px 22px;border-radius:14px;background:linear-gradient(180deg,#6ff3f5,var(--cy));box-shadow:0 5px 0 #138a90,0 10px 20px #2de2e633;transition:transform .12s,box-shadow .12s;text-decoration:none;display:inline-block;text-align:center}
-.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #138a90}
-.btn.mg{color:#fff;background:linear-gradient(180deg,#ff72b8,var(--mg));box-shadow:0 5px 0 #a3185f}
+.fl{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.fl span{position:absolute;bottom:-40px;font-size:22px;opacity:.25;animation:up linear infinite}
+@keyframes up{to{transform:translateY(-115vh) rotate(360deg)}}
+.app{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:0 16px}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0}
+.back{width:42px;height:42px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--tx);font-size:20px;cursor:pointer}
+.ttl{font:800 17px Sora,"Hind Siliguri",sans-serif;background:linear-gradient(90deg,#ffe28a,#ff72b8,#6ff3f5);-webkit-background-clip:text;background-clip:text;color:transparent;text-align:center;flex:1}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:7px 12px;font:700 14px Sora,sans-serif;color:#ff6b8a;box-shadow:0 0 16px #ff6b8a33}
+button,.btn{position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.rip{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:rip .65s ease-out;pointer-events:none}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+.btn{border:0;cursor:pointer;font:700 16px "Hind Siliguri",sans-serif;color:#06112a;padding:13px 22px;border-radius:16px;background:linear-gradient(180deg,#6ff3f5,var(--cy));box-shadow:0 5px 0 #138a90,0 10px 24px #2de2e644;transition:transform .12s,box-shadow .12s;text-decoration:none;display:inline-block;text-align:center}
+.btn:active{transform:translateY(4px) scale(.98);box-shadow:0 1px 0 #138a90}
+.btn.mg{color:#fff;background:linear-gradient(180deg,#ff72b8,var(--mg));box-shadow:0 5px 0 #a3185f,0 10px 24px #ff3d9a55}
+.btn.gd{background:linear-gradient(180deg,#ffe28a,var(--gd));box-shadow:0 5px 0 #b98400,0 10px 24px #ffc93c44}
+.btn.pu{color:#fff;background:linear-gradient(180deg,#a678ff,#6a2cc9);box-shadow:0 5px 0 #3e1a80,0 10px 24px #6a2cc955}
 .btn.ghost{background:var(--card);color:var(--tx);box-shadow:none;border:1px solid var(--line)}
-.btn.sm{padding:7px 16px;font-size:14px;border-radius:10px;box-shadow:0 3px 0 #138a90}
-.btn.mg.sm{box-shadow:0 3px 0 #a3185f}
+.btn.sm{padding:8px 16px;font-size:14px;border-radius:12px}
 .btn[disabled]{filter:grayscale(1) brightness(.6);cursor:not-allowed}
 .full{width:100%;display:block}
+.pulse{animation:pls 1.6s ease-in-out infinite}
+@keyframes pls{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
 :focus-visible{outline:3px solid var(--gd);outline-offset:2px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:12px;backdrop-filter:blur(6px);animation:in .5s ease both}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .mut{color:var(--mut);font-size:14px}
-.tot{font:800 22px Sora,sans-serif;color:var(--cy)}
-.price{color:var(--gd);font-weight:700}
+.tot{font:800 24px Sora,sans-serif;color:var(--cy)}
+.price{color:var(--gd);font-weight:800}
 h3.sec{font-size:18px;margin:20px 0 10px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.mini{background:#0003;border-radius:12px;padding:10px 4px;text-align:center}.mini b{display:block;font:800 20px Sora,sans-serif}.mini span{font-size:12px}
-.gcard{display:flex;align-items:center;gap:12px}
-.gi{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-size:28px;background:linear-gradient(135deg,#6a2cc9,#c2268a);box-shadow:inset 0 -4px 0 #0004;flex:none}
-.gcard>div:nth-child(2){flex:1;min-width:0}
-.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.mc{aspect-ratio:1;border-radius:14px;border:0;font-size:30px;background:#2a2d6e;color:#000;cursor:pointer;display:grid;place-items:center;padding:0}
-.mc.f{background:#fff}.mc.m{background:#1a7a4a}
-.qopt{display:block;width:100%;text-align:left;margin-bottom:10px;padding:14px;border-radius:14px;border:1px solid var(--line);background:#0a0c2e;color:var(--tx);font:600 16px "Hind Siliguri",sans-serif;cursor:pointer}
-.qopt:active{background:#1c2060}
-#cv{display:block;width:100%;max-width:340px;margin:0 auto;background:#0a0c2e;border:1px solid var(--line);border-radius:16px;touch-action:none}
+.g3{grid-template-columns:repeat(3,1fr)}
+.mini{background:#0004;border-radius:14px;padding:10px 4px;text-align:center}.mini b{display:block;font:800 19px Sora,sans-serif}.mini span{font-size:12px;color:var(--mut)}
+/* লবি */
+.hero0{position:relative;border-radius:24px;padding:18px;background:linear-gradient(135deg,#6a2cc9,#c2268a,#f08a1c);background-size:200% 200%;animation:bg 8s ease infinite;box-shadow:0 12px 40px #c2268a55;overflow:hidden}
+.hero0:after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.14)}
+.cd4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.cd4 div{background:#0005;border-radius:14px;padding:8px 0;text-align:center}.cd4 b{display:block;font:800 22px Sora,sans-serif}.cd4 span{font-size:11px;opacity:.85}
+.pz{display:flex;gap:8px;margin-top:8px}
+.pz div{flex:1;text-align:center;background:#0005;border-radius:14px;padding:8px 2px;font-weight:700}
+.gc{position:relative;border:0;border-radius:22px;padding:0;overflow:hidden;cursor:pointer;text-align:left;color:#fff;min-height:150px;box-shadow:0 10px 26px #0007;animation:in .5s ease both}
+.gc .bgi{position:absolute;inset:0;background-size:cover;background-position:center}
+.gc .ov{position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,#000b)}
+.gc .em{position:absolute;right:10px;top:6px;font-size:54px;animation:flt 3s ease-in-out infinite;filter:drop-shadow(0 6px 10px #0008)}
+@keyframes flt{50%{transform:translateY(-8px) rotate(6deg)}}
+.gc .tx{position:absolute;left:12px;right:12px;bottom:10px}
+.gc b{display:block;font:800 16px Sora,"Hind Siliguri",sans-serif}
+.gc small{display:inline-block;background:#0007;border-radius:99px;padding:1px 9px;font-size:12px;margin-top:3px}
+/* গেম পেজ */
+.hero{position:relative;border-radius:24px;overflow:hidden;min-height:190px;display:flex;align-items:flex-end;box-shadow:0 14px 40px #0008}
+.hero .bgi{position:absolute;inset:0;background-size:cover;background-position:center;animation:zoom 14s ease-in-out infinite alternate}
+@keyframes zoom{to{transform:scale(1.08)}}
+.hero .ov{position:absolute;inset:0;background:linear-gradient(180deg,transparent 20%,#000c)}
+.hero .em{position:absolute;right:14px;top:10px;font-size:70px;animation:flt 3s ease-in-out infinite;filter:drop-shadow(0 8px 12px #0009)}
+.hero .tx{position:relative;padding:16px;width:100%}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.opts .btn{padding:14px 4px;font-size:15px}
+.opts .btn span{display:block;font-size:22px;margin-bottom:2px}
 .rk{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--line)}
-.rk .n{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:700 14px Sora,sans-serif;background:var(--card)}
-.me{border:1px solid var(--cy);box-shadow:0 0 24px #2de2e633;background:linear-gradient(135deg,#0d3a5a,#16206a)}
-.toast{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);background:#ff6b8a;color:#2a0510;padding:10px 20px;border-radius:99px;font-weight:600;display:none;z-index:30;text-align:center;max-width:90%}
+.rk:last-child{border-bottom:0}
+.rk .n{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:800 14px Sora,sans-serif;background:#0005}
+.av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font:800 16px Sora,sans-serif;background:linear-gradient(135deg,var(--cy),var(--mg));color:#06112a;flex:none}
+/* র‍্যাংকিং */
+.seg{display:grid;grid-template-columns:1fr 1fr;background:#0005;border-radius:16px;padding:4px;margin-bottom:10px}
+.seg button{border:0;background:none;color:var(--mut);font:700 15px "Hind Siliguri",sans-serif;padding:10px;border-radius:12px;cursor:pointer}
+.seg button.on{background:linear-gradient(135deg,#6a2cc9,#c2268a);color:#fff;box-shadow:0 4px 16px #c2268a66}
+.chs{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}
+.chs::-webkit-scrollbar{display:none}
+.chs button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--mut);font:600 14px "Hind Siliguri",sans-serif;padding:8px 14px;border-radius:99px;cursor:pointer}
+.chs button.on{background:var(--tx);color:#0a0b1e}
+.pod{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:8px;align-items:end;margin:8px 0 16px;text-align:center}
+.pc{position:relative;border-radius:20px 20px 10px 10px;padding:14px 4px 10px;border:1px solid var(--line);animation:in .6s ease both}
+.pc.g1{background:linear-gradient(180deg,#d9a400,#4a3300);min-height:196px;border-color:#ffe28a;box-shadow:0 0 40px #ffc93c88,0 10px 0 #0006}
+.pc.g2{background:linear-gradient(180deg,#9aa3b8,#2a3042);min-height:160px;box-shadow:0 0 24px #9aa3b855}
+.pc.g3{background:linear-gradient(180deg,#b9763c,#3a210f);min-height:140px;box-shadow:0 0 24px #b9763c55}
+.pc .cr{font-size:26px;height:32px;animation:flt 2.2s ease-in-out infinite}
+.pc b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 4px}
+.pc .av{margin:4px auto}
+.pc .sc{font:800 17px Sora,sans-serif;color:#fff}
+.pc .no{font:800 24px Sora,sans-serif;opacity:.9}
+.mecard{border:1px solid #6ff3f5;background:linear-gradient(135deg,#0d3a5a,#2a1070);box-shadow:0 0 36px #2de2e655}
+.tier{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:3px 12px;font-weight:800;background:linear-gradient(135deg,#ffe28a,#ff72b8);color:#2a0a30}
+.bar{height:10px;border-radius:9px;background:#0007;overflow:hidden;margin:10px 0}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cy),var(--mg),var(--gd));transition:width 1.2s ease}
+/* খেলার ভেতরে */
+.hud{display:flex;justify-content:space-between;align-items:center;font:800 17px Sora,sans-serif;margin-bottom:10px}
+.hud .t{color:var(--gd)}
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.mc{aspect-ratio:1;border-radius:16px;border:0;font-size:34px;background:linear-gradient(135deg,#6a2cc9,#c2268a);color:#000;cursor:pointer;display:grid;place-items:center;padding:0;box-shadow:0 5px 0 #3e1a80}
+.mc:after{content:"?";position:absolute;color:#ffffff88;font:800 22px Sora,sans-serif}
+.mc.f{background:#fff;animation:flip .35s ease;box-shadow:0 5px 0 #aaa}.mc.f:after{content:""}
+.mc.m{background:linear-gradient(135deg,#1ec878,#0f8a5a);animation:mt .5s ease;box-shadow:0 5px 0 #0a5a3a}.mc.m:after{content:""}
+@keyframes flip{0%{transform:rotateY(90deg)}100%{transform:none}}
+@keyframes mt{40%{transform:scale(1.2) rotate(8deg)}100%{transform:none}}
+.qc{animation:in .35s ease both}
+.qopt{display:block;width:100%;text-align:left;margin-bottom:10px;padding:15px;border-radius:16px;border:0;color:#fff;font:700 16px "Hind Siliguri",sans-serif;cursor:pointer;box-shadow:0 4px 0 #0006}
+.qopt:nth-child(1){background:linear-gradient(135deg,#6a2cc9,#9a4cff)}.qopt:nth-child(2){background:linear-gradient(135deg,#0f8a5a,#1ec878)}.qopt:nth-child(3){background:linear-gradient(135deg,#c2410c,#f08a1c)}.qopt:nth-child(4){background:linear-gradient(135deg,#c2268a,#ff5fa8)}
+.qopt:active{transform:translateY(3px);box-shadow:0 1px 0 #0006}
+.pg{height:8px;border-radius:9px;background:#0006;overflow:hidden;margin-bottom:12px}.pg i{display:block;height:100%;background:linear-gradient(90deg,var(--cy),var(--mg));transition:width .4s}
+.cvw{transition:transform .1s}.cvw.shake{animation:shk .3s}
+@keyframes shk{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+#cv{display:block;width:100%;max-width:340px;margin:0 auto;border:2px solid #ffffff22;border-radius:20px;touch-action:none;box-shadow:0 0 40px #6a2cc966}
+#ta{position:relative;height:340px;border:2px solid #ffffff22;border-radius:20px;overflow:hidden;touch-action:manipulation;background:radial-gradient(circle at 50% 40%,#2a1070,#0a0c2e);box-shadow:0 0 40px #c2268a55}
+#ta.miss{animation:shk .25s}
+.tg{position:absolute;width:62px;height:62px;border-radius:50%;border:0;font-size:28px;cursor:pointer;animation:popin .18s ease;box-shadow:0 0 22px #fff8}
+@keyframes popin{from{transform:scale(0)}to{transform:scale(1)}}
+.fp{position:absolute;font:800 18px Sora,sans-serif;color:#ffe28a;pointer-events:none;animation:fpu .7s ease-out forwards}
+@keyframes fpu{to{transform:translateY(-40px);opacity:0}}
+.cd{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:#000a;pointer-events:none}
+.cd b{font:800 96px Sora,"Hind Siliguri",sans-serif;background:linear-gradient(135deg,#ffe28a,#ff72b8,#6ff3f5);-webkit-background-clip:text;background-clip:text;color:transparent;animation:cdp .65s ease both}
+@keyframes cdp{from{transform:scale(2.4);opacity:0}to{transform:scale(1);opacity:1}}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:70;overflow:hidden}
+#fx span{position:absolute;animation:pop .9s ease-out forwards}
+@keyframes pop{to{transform:translate(var(--dx),var(--dy)) scale(.3) rotate(var(--r));opacity:0}}
+#fx i{position:absolute;top:-20px;width:10px;height:16px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+.toast{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);background:#ff6b8a;color:#2a0510;padding:10px 20px;border-radius:99px;font-weight:700;display:none;z-index:80;text-align:center;max-width:90%}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important}}
 </style>
 </head>
 <body>
+<div class="fl" id="fl"></div>
 <div class="app">
-  <header><a class="back" href="/free">← ফিরে যান</a><div class="chip" id="cr">♦ 0</div></header>
+  <header><button class="back" id="bk" aria-label="পেছনে">←</button><div class="ttl" id="tt">🎮 গেম টুর্নামেন্ট</div><div class="chip" id="cr">♦ 0</div></header>
   <main id="view"><div class="mut" style="text-align:center;padding:40px 0">লোড হচ্ছে...</div></main>
 </div>
+<div id="fx"></div>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
 (function(){
 var $=function(s){return document.querySelector(s)};
-var V=$('#view'),INFO=null,tick=null,loopId=0,busy=false,tos=[],LEFT={};
+var V=$('#view'),INFO=null,ME=null,tick=null,loopId=0,busy=false,tos=[],playing=false,cdI=null,stack=[],cur={v:'lobby'};
 var NM={memory:'🧠 মেমোরি ম্যাচ',quiz:'❓ কুইজ রাশ',coin:'🪙 কয়েন ক্যাচার',tap:'⚡ ট্যাপ রাশ'};
+var EM={memory:'🧠',quiz:'❓',coin:'🪙',tap:'⚡'};
 var DESC={memory:'১৬টা কার্ডে জোড়া মেলান। কম চাল ও কম সময়ে বেশি স্কোর।',quiz:'৮টা প্রশ্নের উত্তর দিন। ঠিক উত্তর ও গতিতে স্কোর।',coin:'৩০ সেকেন্ডে কয়েন ধরুন, বোমা এড়ান।',tap:'২০ সেকেন্ডে যত বেশি লক্ষ্যে ট্যাপ করুন।'};
+var COL={memory:['#6a2cc9','#c2268a'],quiz:['#0f8a5a','#164a6a'],coin:['#e8a900','#c2410c'],tap:['#e8501c','#a31d5c']};
+var TIER=[['ব্রোঞ্জ','🥉',0],['সিলভার','🥈',1000],['গোল্ড','🥇',4000],['প্ল্যাটিনাম','💠',12000],['ডায়মন্ড','💎',30000],['লেজেন্ড','👑',80000]];
 
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function fm(n){return Number(n||0).toFixed(2).replace(/\.?0+$/,'')}
 function toast(m){var t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display='none'},2800)}
+function ini(n){return String(n).replace(/[^A-Za-z]/g,'').slice(0,2).toUpperCase()||'আ'}
 async function api(p,b){
   var r=await fetch(p,{method:b!==undefined?'POST':'GET',headers:{'Content-Type':'application/json'},body:b!==undefined?JSON.stringify(b):undefined,credentials:'same-origin'});
   var d={};try{d=await r.json()}catch(e){}
@@ -71,76 +162,176 @@ async function api(p,b){
   return d;
 }
 function TO(t){tos.push(t);return t}
-function stopGame(){clearInterval(tick);tick=null;cancelAnimationFrame(loopId);tos.forEach(clearTimeout);tos=[]}
-function shell(title){
-  V.innerHTML='<div class="card"><div class="row"><b>'+title+'</b><span class="mut" id="gt"></span></div><div id="gb" style="margin-top:12px"></div></div><button class="btn ghost full" id="gq">লবিতে ফিরুন (খেলা বাতিল)</button>';
-  $('#gq').onclick=function(){if(confirm('খেলা ছেড়ে গেলে এই সুযোগটা শেষ হয়ে যাবে। ফিরবেন?'))lobby()};
+function stopGame(){clearInterval(tick);tick=null;clearInterval(cdI);cdI=null;cancelAnimationFrame(loopId);tos.forEach(clearTimeout);tos=[];var c=document.querySelector('.cd');if(c)c.remove()}
+
+/* ---------- অ্যানিমেশন: রিপল, কণা, কনফেটি, গোনা ---------- */
+document.addEventListener('pointerdown',function(e){
+  var b=e.target.closest('button,.btn');if(!b||b.disabled)return;
+  var r=b.getBoundingClientRect(),s=Math.max(r.width,r.height)*2,sp=document.createElement('span');
+  sp.className='rip';sp.style.cssText='width:'+s+'px;height:'+s+'px;left:'+(e.clientX-r.left-s/2)+'px;top:'+(e.clientY-r.top-s/2)+'px';
+  b.appendChild(sp);setTimeout(function(){sp.remove()},700);
+});
+function burst(x,y,list,n){
+  var fx=$('#fx');
+  for(var i=0;i<(n||10);i++){
+    var s=document.createElement('span'),a=Math.random()*6.28,d=40+Math.random()*90;
+    s.textContent=list[i%list.length];s.style.cssText='left:'+x+'px;top:'+y+'px;font-size:'+(14+Math.random()*14)+'px;--dx:'+Math.cos(a)*d+'px;--dy:'+Math.sin(a)*d+'px;--r:'+(Math.random()*360)+'deg';
+    fx.appendChild(s);setTimeout(function(el){el.remove()},950,s);
+  }
+}
+function confetti(){
+  var fx=$('#fx'),C=['#ffc93c','#ff3d9a','#2de2e6','#4be38a','#a678ff','#ff8a3d'];
+  for(var i=0;i<46;i++){
+    var s=document.createElement('i');
+    s.style.cssText='left:'+Math.random()*100+'%;background:'+C[i%C.length]+';animation-duration:'+(1.6+Math.random()*1.6)+'s;animation-delay:'+Math.random()*.5+'s';
+    fx.appendChild(s);setTimeout(function(el){el.remove()},3800,s);
+  }
+}
+function countUp(el,to,ms){
+  var t0=performance.now();
+  (function f(t){var p=Math.min(1,(t-t0)/ms);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(t0);
+}
+function countdown(cb){
+  var o=document.createElement('div'),L=['৩','২','১','শুরু!'],i=0;
+  o.className='cd';document.body.appendChild(o);
+  cdI=setInterval(function(){
+    if(i>=L.length){clearInterval(cdI);cdI=null;o.remove();cb();return}
+    o.innerHTML='<b>'+L[i]+'</b>';i++;
+  },650);
+}
+(function(){var f=$('#fl'),E=['🎮','♦','🪙','⚡','🏆','⭐','💎'];for(var i=0;i<14;i++){var s=document.createElement('span');s.textContent=E[i%E.length];s.style.cssText='left:'+Math.random()*100+'%;animation-duration:'+(12+Math.random()*14)+'s;animation-delay:-'+Math.random()*20+'s;font-size:'+(16+Math.random()*16)+'px';f.appendChild(s)}})();
+
+/* ---------- নেভিগেশন ---------- */
+function nav(v,a,replace){if(!replace&&cur&&cur.v)stack.push(cur);cur={v:v,a:a};render()}
+function render(){stopGame();window.scrollTo(0,0);$('#tt').textContent='🎮 গেম টুর্নামেন্ট';({lobby:lobby,detail:detail,ranking:ranking})[cur.v](cur.a)}
+$('#bk').onclick=function(){
+  if(playing){if(!confirm('খেলা ছেড়ে গেলে এই সুযোগটা শেষ হয়ে যাবে। ফিরবেন?'))return;playing=false}
+  var p=stack.pop();
+  if(!p){location.href='/free';return}
+  cur=p;render();
+};
+function imgUrl(g,k){var v=((INFO.games.filter(function(x){return x.id===g})[0]||{}).img||{})[k];return v?'/api/game/img/'+g+'/'+k+'?v='+v:null}
+function bgOf(g,k){var u=imgUrl(g,k);return u?'<div class="bgi" style="background-image:url('+u+')"></div>':'<div class="bgi" style="background:linear-gradient(135deg,'+COL[g][0]+','+COL[g][1]+')"></div>'}
+async function loadAll(){
+  var me=await api('/api/me');
+  if(me.user.site!=='free'){location.href='/smm';return false}
+  ME=me.user;$('#cr').textContent='♦ '+fm(ME.red);
+  INFO=await api('/api/game/info');return true;
 }
 
 /* ---------- লবি ---------- */
 async function lobby(){
-  stopGame();
   V.innerHTML='<div class="mut" style="text-align:center;padding:30px">লোড হচ্ছে...</div>';
   try{
-    var me=await api('/api/me');
-    if(me.user.site!=='free'){location.href='/smm';return}
-    $('#cr').textContent='♦ '+fm(me.user.red);
-    INFO=await api('/api/game/info');
-    var left=Math.max(0,INFO.endsAt-Date.now()),dd=Math.floor(left/864e5),hh=Math.floor(left%864e5/36e5);
-    var h='<div class="card"><h2 style="font-size:20px;margin-bottom:6px">🏆 সাপ্তাহিক টুর্নামেন্ট</h2><div class="mut">শেষ হতে বাকি: <b style="color:var(--gd)">'+dd+' দিন '+hh+' ঘণ্টা</b></div><div class="mut" style="margin-top:8px">পুরস্কার (রেড ডায়মন্ড): '+INFO.prizes.map(function(p,i){return (i+1)+'ম ♦'+p}).join(' · ')+'</div><div class="mut" style="margin-top:8px">এন্ট্রি সম্পূর্ণ ফ্রি, কোনো বাজি বা টাকা লাগে না, এটা দক্ষতার খেলা। প্রতি গেমে দিনে '+INFO.attempts+' বার খেলা যায়, সপ্তাহের সেরা স্কোর গোনা হয়। পুরস্কারের জন্য সপ্তাহে কমপক্ষে '+INFO.minPlays+' বার খেলতে হবে। সপ্তাহ শেষে সেরা ১০ জনের অ্যাকাউন্টে নিজে নিজে ডায়মন্ড যোগ হয়।</div></div><h3 class="sec" style="margin-top:6px">গেম বেছে নিন</h3>';
-    INFO.games.forEach(function(g){
-      LEFT[g.id]=g.left;
-      h+='<div class="card"><div class="gcard"><div class="gi">'+g.icon+'</div><div><b>'+esc(g.name)+'</b><div class="mut">'+DESC[g.id]+'</div><div class="mut" style="margin-top:4px">আপনার সেরা: <b>'+g.best+'</b>'+(g.rank?' · র‍্যাংক #'+g.rank:'')+' · আজ বাকি '+g.left+' বার</div></div></div><div class="row" style="margin-top:12px"><button class="btn mg sm" data-play="'+g.id+'"'+(g.left>0?'':' disabled')+'>খেলুন</button><button class="btn ghost sm" data-board="'+g.id+'">লিডারবোর্ড</button></div></div>';
+    if(!(await loadAll()))return;
+    var h='<div class="hero0"><h2 style="font-size:22px">🏆 সাপ্তাহিক টুর্নামেন্ট</h2><div class="mut" style="color:#fff;opacity:.9">শেষ হতে বাকি</div><div class="cd4" id="cd4"><div><b>0</b><span>দিন</span></div><div><b>0</b><span>ঘণ্টা</span></div><div><b>0</b><span>মিনিট</span></div><div><b>0</b><span>সেকেন্ড</span></div></div><div class="pz"><div>🥇 ♦'+(INFO.prizes[0]||0)+'</div><div>🥈 ♦'+(INFO.prizes[1]||0)+'</div><div>🥉 ♦'+(INFO.prizes[2]||0)+'</div></div></div>';
+    h+='<h3 class="sec">গেম বেছে নিন</h3><div class="grid">';
+    INFO.games.forEach(function(g,i){
+      h+='<button class="gc" data-g="'+g.id+'" style="animation-delay:'+i*.08+'s">'+bgOf(g.id,'cover')+'<div class="ov"></div>'+(imgUrl(g.id,'cover')?'':'<div class="em">'+g.icon+'</div>')+'<div class="tx"><b>'+esc(g.name)+'</b><small>আজ বাকি '+g.left+' বার</small></div></button>';
     });
+    h+='</div>';
     if(!INFO.games.length)h+='<div class="card mut">এখন কোনো গেম চালু নেই।</div>';
+    h+='<button class="btn pu full pulse" data-rk="all" style="margin-top:14px">🏆 প্রিমিয়াম র‍্যাংকিং দেখুন</button><div class="card" style="margin-top:14px"><b>নিয়ম</b><div class="mut" style="margin-top:6px">এন্ট্রি সম্পূর্ণ ফ্রি, কোনো বাজি বা টাকা লাগে না, এটা দক্ষতার খেলা। প্রতি গেমে দিনে '+INFO.attempts+' বার খেলা যায়, সপ্তাহের সেরা স্কোর গোনা হয়। পুরস্কারের জন্য সপ্তাহে কমপক্ষে '+INFO.minPlays+' বার খেলতে হবে। সপ্তাহ শেষে সেরা '+INFO.prizes.length+' জনের অ্যাকাউন্টে রেড ডায়মন্ড নিজে যোগ হয়।</div></div>';
     V.innerHTML=h;
+    var t=function(){var l=Math.max(0,INFO.endsAt-Date.now()),e=$('#cd4');if(!e)return;var v=[Math.floor(l/864e5),Math.floor(l%864e5/36e5),Math.floor(l%36e5/6e4),Math.floor(l%6e4/1e3)];e.querySelectorAll('b').forEach(function(b,i){b.textContent=v[i]})};
+    t();tick=setInterval(t,1000);
   }catch(e){V.innerHTML='<div class="card mut">'+esc(e.message)+'</div>'}
 }
+
+/* ---------- একটা গেমের পেজ: ছবি, ৩ অপশন, নিচে র‍্যাংকিং ও ব্যালেন্স ---------- */
+async function detail(g){
+  V.innerHTML='<div class="mut" style="text-align:center;padding:30px">লোড হচ্ছে...</div>';
+  try{
+    if(!INFO||!ME){if(!(await loadAll()))return}
+    var G=INFO.games.filter(function(x){return x.id===g})[0];
+    if(!G){nav('lobby',null,true);return}
+    var b=await api('/api/game/board?game='+g);
+    $('#tt').textContent=NM[g];
+    var h='<div class="hero">'+bgOf(g,'hero')+'<div class="ov"></div>'+(imgUrl(g,'hero')?'':'<div class="em">'+G.icon+'</div>')+'<div class="tx"><h2 style="font-size:22px">'+esc(G.name)+'</h2><div class="mut" style="color:#fff;opacity:.9">'+DESC[g]+'</div></div></div>';
+    h+='<div class="opts"><button class="btn mg pulse" id="pl"'+(G.left>0?'':' disabled')+'><span>▶</span>খেলুন</button><button class="btn gd" data-rk="'+g+'"><span>🏆</span>র‍্যাংকিং</button><button class="btn pu" id="ru"><span>📜</span>নিয়ম</button></div><div id="rules" class="card" style="display:none"><b>নিয়ম</b><div class="mut" style="margin-top:6px">'+DESC[g]+' প্রতিদিন '+INFO.attempts+' বার খেলা যায়। সপ্তাহের সেরা স্কোর র‍্যাংকিংয়ে গোনা হয়। সপ্তাহ শেষে সেরা '+INFO.prizes.length+' জন রেড ডায়মন্ড পুরস্কার পান (সপ্তাহে কমপক্ষে '+INFO.minPlays+' বার খেলা লাগবে)। এন্ট্রি ফ্রি, কোনো বাজি নেই।</div></div>';
+    h+='<h3 class="sec">🏆 এই সপ্তাহের সেরা</h3><div class="card">';
+    if(!b.top.length)h+='<div class="mut">এখনো কেউ খেলেনি। প্রথম হওয়ার সুযোগ আপনার!</div>';
+    b.top.slice(0,5).forEach(function(r,i){h+='<div class="rk"'+(r.me?' style="color:var(--cy);font-weight:800"':'')+'><div class="n">'+(i<3?['🥇','🥈','🥉'][i]:i+1)+'</div><div style="flex:1">'+esc(r.name)+(r.me?' (আপনি)':'')+'</div><span class="price">'+r.best+'</span></div>'});
+    h+='<button class="btn ghost full sm" data-rk="'+g+'" style="margin-top:10px">সম্পূর্ণ র‍্যাংকিং</button></div>';
+    h+='<h3 class="sec">💎 গেম ব্যালেন্স</h3><div class="card"><div class="grid g3"><div class="mini"><b style="color:#ff6b8a">♦ '+fm(ME.red)+'</b><span>রেড ডায়মন্ড</span></div><div class="mini"><b style="color:var(--gd)">♦ '+fm(INFO.earned)+'</b><span>গেম থেকে মোট আয়</span></div><div class="mini"><b>'+G.left+'</b><span>আজ বাকি সুযোগ</span></div></div><div class="grid" style="margin-top:10px"><div class="mini"><b>'+G.best+'</b><span>আপনার সেরা স্কোর</span></div><div class="mini"><b>'+(G.rank?'#'+G.rank:'—')+'</b><span>বর্তমান র‍্যাংক</span></div></div></div>';
+    V.innerHTML=h;
+    $('#pl').onclick=function(){startGame(g)};
+    $('#ru').onclick=function(){var r=$('#rules');r.style.display=r.style.display==='none'?'block':'none'};
+  }catch(e){V.innerHTML='<div class="card mut">'+esc(e.message)+'</div>'}
+}
+
+/* ---------- প্রিমিয়াম র‍্যাংকিং ---------- */
+async function ranking(a){
+  a=a||{};var scope=a.scope||'week',game=a.game||'all';
+  V.innerHTML='<div class="mut" style="text-align:center;padding:30px">লোড হচ্ছে...</div>';
+  try{
+    if(!INFO||!ME){if(!(await loadAll()))return}
+    var res=await Promise.all([api('/api/game/ranking?scope='+scope+'&game='+game),api('/api/game/ranking?scope=all&game=all')]);
+    var d=res[0],life=res[1].me?res[1].me.total:0;
+    $('#tt').textContent='🏆 র‍্যাংকিং';
+    var h='<div class="seg"><button data-sc="week" class="'+(scope==='week'?'on':'')+'">এই সপ্তাহ</button><button data-sc="all" class="'+(scope==='all'?'on':'')+'">সর্বকালের</button></div><div class="chs"><button data-gm="all" class="'+(game==='all'?'on':'')+'">🌟 সব গেম</button>'+Object.keys(NM).map(function(k){return '<button data-gm="'+k+'" class="'+(game===k?'on':'')+'">'+NM[k]+'</button>'}).join('')+'</div>';
+    var T=d.top;
+    if(T.length>=3){
+      h+='<div class="pod">';
+      [1,0,2].forEach(function(i){var r=T[i];h+='<div class="pc g'+(i+1)+'" style="animation-delay:'+(i===0?0.25:i===1?0:.12)+'s"><div class="cr">'+(i===0?'👑':'')+'</div><div class="av">'+esc(ini(r.name))+'</div><b>'+esc(r.name)+(r.me?' ✦':'')+'</b><div class="sc">'+r.total+'</div><div class="no">'+(i+1)+'</div></div>'});
+      h+='</div>';
+    }
+    var tv=0;TIER.forEach(function(t,i){if(life>=t[2])tv=i});var nx=TIER[tv+1],pg=nx?Math.min(100,(life-TIER[tv][2])/(nx[2]-TIER[tv][2])*100):100;
+    h+='<div class="card mecard"><div class="row"><div><div class="mut">আপনার অবস্থান</div><div class="tot">'+(d.me?'#'+d.me.rank:'—')+'</div><div class="mut">'+(d.me?d.me.total+' পয়েন্ট · '+d.me.plays+' বার খেলেছেন':'এখনো খেলেননি')+'</div></div><div style="text-align:right"><div style="font-size:38px">'+TIER[tv][1]+'</div><span class="tier">'+TIER[tv][0]+' লেভেল</span></div></div><div class="bar"><i id="pgb"></i></div><div class="mut">'+(nx?nx[0]+' লেভেলে যেতে আরও '+Math.max(0,nx[2]-life)+' পয়েন্ট দরকার (মোট '+life+')':'সর্বোচ্চ লেভেলে আছেন, মোট '+life+' পয়েন্ট')+'</div></div>';
+    h+='<div class="card">';
+    if(!T.length)h+='<div class="mut">এখনো কেউ খেলেনি। প্রথম হওয়ার সুযোগ আপনার!</div>';
+    T.forEach(function(r,i){if(i<3&&T.length>=3)return;h+='<div class="rk"'+(r.me?' style="color:var(--cy);font-weight:800"':'')+'><div class="n">'+(i+1)+'</div><div class="av" style="width:38px;height:38px;font-size:14px">'+esc(ini(r.name))+'</div><div style="flex:1">'+esc(r.name)+(r.me?' (আপনি)':'')+'<div class="mut">'+r.plays+' বার খেলেছেন</div></div><span class="price">'+r.total+'</span></div>'});
+    V.innerHTML=h+'</div>';
+    setTimeout(function(){var p=$('#pgb');if(p)p.style.width=pg+'%'},80);
+    cur.a={scope:scope,game:game};
+    if(T.length)confetti();
+  }catch(e){V.innerHTML='<div class="card mut">'+esc(e.message)+'</div>'}
+}
+
+/* ---------- খেলা শুরু ও শেষ ---------- */
 async function startGame(g){
   if(busy)return;busy=true;
   try{
     var S=await api('/api/game/start',{game:g});
-    S.game=g;LEFT[g]=S.left;
+    S.game=g;
+    playing=true;
     ({memory:gMemory,quiz:gQuiz,coin:gCoin,tap:gTap})[g](S);
   }catch(e){toast(e.message)}
   busy=false;
 }
+function shell(g){
+  stopGame();
+  $('#tt').textContent=NM[g];
+  V.innerHTML='<div class="card"><div class="hud"><span>'+EM[g]+' '+NM[g].slice(2)+'</span><span class="t" id="gt"></span></div><div id="gb"></div></div>';
+}
 async function finish(S,body){
   stopGame();
-  V.innerHTML='<div class="mut" style="text-align:center;padding:40px">স্কোর যাচাই হচ্ছে...</div>';
+  V.innerHTML='<div class="mut" style="text-align:center;padding:40px">✨ স্কোর যাচাই হচ্ছে...</div>';
   body.token=S.token;
-  try{var r=await api('/api/game/finish',body);result(r)}
-  catch(e){V.innerHTML='<div class="card"><b>স্কোর গ্রহণ হয়নি</b><p class="mut">'+esc(e.message)+'</p></div><button class="btn full" id="bk">লবিতে ফিরুন</button>';$('#bk').onclick=lobby}
+  try{var r=await api('/api/game/finish',body);playing=false;result(r,S.left)}
+  catch(e){playing=false;V.innerHTML='<div class="card"><b>স্কোর গ্রহণ হয়নি</b><p class="mut">'+esc(e.message)+'</p></div><button class="btn full" id="bk2">ফিরে যান</button>';$('#bk2').onclick=function(){cur={v:'detail',a:S.game};render()}}
 }
-function result(r){
-  var g=r.game;
-  V.innerHTML='<div class="card" style="text-align:center"><div class="mut">'+NM[g]+'</div><div class="tot" style="font-size:46px;margin:6px 0">'+r.score+'</div><div class="mut">আপনার স্কোর</div><div class="grid" style="margin-top:12px"><div class="mini"><b>'+r.best+'</b><span class="mut">এই সপ্তাহের সেরা</span></div><div class="mini"><b>#'+r.rank+'</b><span class="mut">বর্তমান র‍্যাংক</span></div></div><div class="mut" style="margin-top:10px">এই সপ্তাহে খেলেছেন '+r.plays+' বার</div></div>'+
-    (LEFT[g]>0?'<button class="btn mg full" data-play="'+g+'">আবার খেলুন ('+LEFT[g]+' বার বাকি)</button>':'<div class="card mut">আজকের সুযোগ শেষ, কাল আবার খেলুন।</div>')+
-    '<button class="btn ghost full" data-board="'+g+'" style="margin-top:10px">লিডারবোর্ড দেখুন</button><button class="btn ghost full" id="bk" style="margin-top:10px">লবি</button>';
-  $('#bk').onclick=lobby;
-}
-async function board(g){
-  stopGame();
-  V.innerHTML='<div class="mut" style="text-align:center;padding:30px">লোড হচ্ছে...</div>';
-  try{
-    var d=await api('/api/game/board?game='+g),h='<h3 class="sec" style="margin-top:0">'+NM[g]+' · এই সপ্তাহের সেরা</h3>';
-    if(d.me)h+='<div class="card me"><div class="row"><div><div class="mut">আপনার র‍্যাংক</div><div class="tot">#'+d.me.rank+'</div></div><div style="text-align:right"><div class="mut">সেরা স্কোর</div><b class="price" style="font-size:20px">'+d.me.best+'</b></div></div></div>';
-    h+='<div class="card">';
-    if(!d.top.length)h+='<div class="mut">এখনো কেউ খেলেনি। প্রথম হওয়ার সুযোগ আপনার!</div>';
-    d.top.forEach(function(r,i){h+='<div class="rk"'+(r.me?' style="color:var(--cy);font-weight:700"':'')+'><div class="n">'+(i+1)+'</div><div style="flex:1">'+esc(r.name)+(r.me?' (আপনি)':'')+'<div class="mut">'+r.plays+' বার খেলেছেন</div></div><span class="price">'+r.best+'</span></div>'});
-    V.innerHTML=h+'</div><button class="btn ghost full" id="bk">লবি</button>';
-    $('#bk').onclick=lobby;
-  }catch(e){V.innerHTML='<div class="card mut">'+esc(e.message)+'</div>'}
+function result(r,left){
+  var g=r.game,nw=r.score>0&&r.score>=r.best;
+  $('#tt').textContent='🎉 ফলাফল';
+  V.innerHTML='<div class="card" style="text-align:center"><div class="mut">'+NM[g]+'</div><div class="tot" id="rs" style="font-size:60px;margin:6px 0">0</div><div class="mut">আপনার স্কোর</div>'+(nw?'<div class="tier" style="margin-top:8px">🔥 নতুন সেরা স্কোর!</div>':'')+'<div class="grid" style="margin-top:14px"><div class="mini"><b>'+r.best+'</b><span>এই সপ্তাহের সেরা</span></div><div class="mini"><b>#'+r.rank+'</b><span>বর্তমান র‍্যাংক</span></div></div><div class="mut" style="margin-top:10px">এই সপ্তাহে খেলেছেন '+r.plays+' বার</div></div>'+
+    (left>0?'<button class="btn mg full pulse" id="ag">আবার খেলুন ('+left+' বার বাকি)</button>':'<div class="card mut">আজকের সুযোগ শেষ, কাল আবার খেলুন।</div>')+
+    '<button class="btn gd full" id="rk2" style="margin-top:10px">🏆 র‍্যাংকিং দেখুন</button><button class="btn ghost full" id="dt2" style="margin-top:10px">গেমের পেজে ফিরুন</button>';
+  countUp($('#rs'),r.score,1200);
+  if(r.score>0)confetti();
+  if($('#ag'))$('#ag').onclick=function(){startGame(g)};
+  $('#rk2').onclick=function(){nav('ranking',{game:g})};
+  $('#dt2').onclick=function(){cur={v:'detail',a:g};render()};
 }
 
 /* ---------- মেমোরি ম্যাচ ---------- */
 function gMemory(S){
-  shell('🧠 মেমোরি ম্যাচ');
+  shell('memory');
   var E=['🍎','🚗','⚽','🌙','🐟','🎈','🔔','🌸'],cards=S.cards,open=[],done={},moves=0,lock=false,t0=Date.now();
   var h='<div class="mut" style="margin-bottom:8px" id="mi">চাল: 0</div><div class="mgrid">';
   cards.forEach(function(c,i){h+='<button class="mc" data-i="'+i+'"></button>'});
   $('#gb').innerHTML=h+'</div>';
-  tick=setInterval(function(){$('#gt').textContent=Math.floor((Date.now()-t0)/1000)+' সেকেন্ড'},500);
+  tick=setInterval(function(){var e=$('#gt');if(e)e.textContent=Math.floor((Date.now()-t0)/1000)+' সেকেন্ড'},500);
   var btns=document.querySelectorAll('.mc');
   btns.forEach(function(b){b.onclick=function(){
     var i=Number(b.dataset.i);
@@ -150,8 +341,11 @@ function gMemory(S){
       moves++;$('#mi').textContent='চাল: '+moves;
       var a=open[0],c2=open[1];
       if(cards[a]===cards[c2]){
-        done[a]=true;done[c2]=true;btns[a].classList.add('m');btns[c2].classList.add('m');open=[];
-        if(Object.keys(done).length===16)finish(S,{moves:moves});
+        done[a]=true;done[c2]=true;
+        TO(setTimeout(function(){btns[a].classList.add('m');btns[c2].classList.add('m')},250));
+        [a,c2].forEach(function(k){var r=btns[k].getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,['✨','⭐','💫'],8)});
+        open=[];
+        if(Object.keys(done).length===16)TO(setTimeout(function(){finish(S,{moves:moves})},700));
       }else{
         lock=true;
         TO(setTimeout(function(){btns[a].classList.remove('f');btns[c2].classList.remove('f');btns[a].textContent='';btns[c2].textContent='';open=[];lock=false},700));
@@ -162,16 +356,17 @@ function gMemory(S){
 
 /* ---------- কুইজ রাশ ---------- */
 function gQuiz(S){
-  shell('❓ কুইজ রাশ');
+  shell('quiz');
   var Q=S.questions,i=0,ans=[],t0=Date.now();
-  tick=setInterval(function(){$('#gt').textContent=Math.floor((Date.now()-t0)/1000)+' সেকেন্ড'},500);
+  tick=setInterval(function(){var e=$('#gt');if(e)e.textContent=Math.floor((Date.now()-t0)/1000)+' সেকেন্ড'},500);
   function show(){
     var q=Q[i];
-    $('#gb').innerHTML='<div class="mut">প্রশ্ন '+(i+1)+'/'+Q.length+'</div><h3 style="margin:8px 0 14px;line-height:1.4">'+esc(q.q)+'</h3>'+q.o.map(function(o,k){return '<button class="qopt" data-k="'+k+'">'+esc(o)+'</button>'}).join('');
-    document.querySelectorAll('.qopt').forEach(function(b){b.onclick=function(){
+    $('#gb').innerHTML='<div class="pg"><i style="width:'+(i/Q.length*100)+'%"></i></div><div class="qc"><div class="mut">প্রশ্ন '+(i+1)+'/'+Q.length+'</div><h3 style="margin:8px 0 14px;line-height:1.4">'+esc(q.q)+'</h3>'+q.o.map(function(o,k){return '<button class="qopt" data-k="'+k+'">'+esc(o)+'</button>'}).join('')+'</div>';
+    document.querySelectorAll('.qopt').forEach(function(b){b.onclick=function(ev){
       document.querySelectorAll('.qopt').forEach(function(x){x.disabled=true});
+      burst(ev.clientX,ev.clientY,['⭐','✨'],6);
       ans.push(Number(b.dataset.k));i++;
-      if(i<Q.length)show();else finish(S,{answers:ans});
+      TO(setTimeout(function(){if(i<Q.length)show();else finish(S,{answers:ans})},260));
     }});
   }
   show();
@@ -179,73 +374,86 @@ function gQuiz(S){
 
 /* ---------- কয়েন ক্যাচার ---------- */
 function gCoin(S){
-  shell('🪙 কয়েন ক্যাচার');
-  $('#gb').innerHTML='<canvas id="cv" width="300" height="400"></canvas><div class="mut" id="cs" style="text-align:center;margin-top:8px">ঝুড়ি সরাতে আঙুল টানুন</div>';
-  var cv=$('#cv'),x=cv.getContext('2d'),W=300,H=400,bx=150,items=[],coins=0,bombs=0,last=performance.now(),spawn=0,t0=Date.now(),dur=S.secs*1000;
-  function mv(e){
-    var r=cv.getBoundingClientRect(),p=e.touches?e.touches[0]:e;
-    bx=Math.max(30,Math.min(W-30,(p.clientX-r.left)/r.width*W));
-    if(e.cancelable)e.preventDefault();
-  }
-  cv.addEventListener('touchstart',mv,{passive:false});
-  cv.addEventListener('touchmove',mv,{passive:false});
-  cv.addEventListener('mousemove',mv);
-  function loop(now){
-    var dt=Math.min(50,now-last);last=now;
-    var el=Date.now()-t0;
-    if(el>=dur){finish(S,{coins:coins,bombs:bombs});return}
-    spawn-=dt;
-    if(spawn<=0){spawn=420+Math.random()*300;items.push({x:20+Math.random()*(W-40),y:-14,b:Math.random()<0.25,v:0.12+Math.random()*0.1})}
-    x.clearRect(0,0,W,H);
-    x.fillStyle='#ffc93c';x.fillRect(bx-30,H-26,60,14);
-    x.font='22px sans-serif';x.textAlign='center';
-    for(var k=items.length-1;k>=0;k--){
-      var it=items[k];it.y+=it.v*dt;
-      if(it.y>H-30&&it.y<H-8&&Math.abs(it.x-bx)<34){if(it.b)bombs++;else coins++;items.splice(k,1);continue}
-      if(it.y>H+10){items.splice(k,1);continue}
-      x.fillText(it.b?'💣':'🪙',it.x,it.y);
+  shell('coin');
+  $('#gb').innerHTML='<div class="cvw" id="cw"><canvas id="cv" width="300" height="400"></canvas></div><div class="hud" id="cs" style="justify-content:center;margin-top:10px"></div>';
+  var cv=$('#cv'),x=cv.getContext('2d'),W=300,H=400,bx=150,items=[],ps=[],coins=0,bombs=0,flash=0,stars=[];
+  for(var s0=0;s0<28;s0++)stars.push({x:Math.random()*W,y:Math.random()*H,p:Math.random()*6});
+  function mv(e){var r=cv.getBoundingClientRect(),p=e.touches?e.touches[0]:e;bx=Math.max(30,Math.min(W-30,(p.clientX-r.left)/r.width*W));if(e.cancelable)e.preventDefault()}
+  cv.addEventListener('touchstart',mv,{passive:false});cv.addEventListener('touchmove',mv,{passive:false});cv.addEventListener('mousemove',mv);
+  countdown(function(){
+    var last=performance.now(),spawn=0,t0=Date.now(),dur=S.secs*1000;
+    function loop(now){
+      var dt=Math.min(50,now-last);last=now;var el=Date.now()-t0;
+      if(el>=dur){finish(S,{coins:coins,bombs:bombs});return}
+      spawn-=dt;
+      if(spawn<=0){spawn=420+Math.random()*300;items.push({x:20+Math.random()*(W-40),y:-14,b:Math.random()<0.25,v:0.12+Math.random()*0.1})}
+      var g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#2a1070');g.addColorStop(1,'#0b2a4a');x.fillStyle=g;x.fillRect(0,0,W,H);
+      stars.forEach(function(s){x.globalAlpha=.4+.4*Math.sin(now/400+s.p);x.fillStyle='#fff';x.fillRect(s.x,s.y,2,2)});x.globalAlpha=1;
+      var bg=x.createLinearGradient(bx-30,0,bx+30,0);bg.addColorStop(0,'#ff72b8');bg.addColorStop(1,'#ffc93c');x.fillStyle=bg;x.beginPath();x.roundRect?x.roundRect(bx-30,H-26,60,14,7):x.rect(bx-30,H-26,60,14);x.fill();
+      x.font='24px sans-serif';x.textAlign='center';
+      for(var k=items.length-1;k>=0;k--){
+        var it=items[k];it.y+=it.v*dt;
+        if(it.y>H-32&&it.y<H-8&&Math.abs(it.x-bx)<34){
+          if(it.b){bombs++;flash=1;var w=$('#cw');if(w){w.classList.add('shake');TO(setTimeout(function(){w.classList.remove('shake')},300))}for(var q=0;q<10;q++)ps.push({x:it.x,y:it.y,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,l:1,c:'#ff6b6b'})}
+          else{coins++;for(var q2=0;q2<8;q2++)ps.push({x:it.x,y:it.y,vx:(Math.random()-.5)*.25,vy:-Math.random()*.3,l:1,c:'#ffe28a'})}
+          items.splice(k,1);continue;
+        }
+        if(it.y>H+10){items.splice(k,1);continue}
+        x.fillText(it.b?'💣':'🪙',it.x,it.y);
+      }
+      for(var p=ps.length-1;p>=0;p--){var a=ps[p];a.x+=a.vx*dt;a.y+=a.vy*dt;a.l-=dt/500;if(a.l<=0){ps.splice(p,1);continue}x.globalAlpha=a.l;x.fillStyle=a.c;x.beginPath();x.arc(a.x,a.y,3,0,6.28);x.fill()}x.globalAlpha=1;
+      if(flash>0){x.fillStyle='rgba(255,60,60,'+flash*.35+')';x.fillRect(0,0,W,H);flash-=dt/300}
+      var cs=$('#cs'),gt=$('#gt');
+      if(cs)cs.innerHTML='<span>🪙 '+coins+'</span><span style="margin-left:22px">💣 '+bombs+'</span>';
+      if(gt)gt.textContent=Math.max(0,Math.ceil((dur-el)/1000))+' সেকেন্ড';
+      loopId=requestAnimationFrame(loop);
     }
-    var cs=$('#cs'),gt=$('#gt');
-    if(cs)cs.textContent='🪙 '+coins+'    💣 '+bombs;
-    if(gt)gt.textContent=Math.max(0,Math.ceil((dur-el)/1000))+' সেকেন্ড';
     loopId=requestAnimationFrame(loop);
-  }
-  loopId=requestAnimationFrame(loop);
+  });
 }
 
 /* ---------- ট্যাপ রাশ ---------- */
 function gTap(S){
-  shell('⚡ ট্যাপ রাশ');
-  $('#gb').innerHTML='<div id="ta" style="position:relative;height:340px;background:#0a0c2e;border:1px solid var(--line);border-radius:16px;overflow:hidden;touch-action:manipulation"></div><div class="mut" id="ts" style="text-align:center;margin-top:8px"></div>';
-  var ta=$('#ta'),hits=0,misses=0,t0=Date.now(),dur=S.secs*1000,curT=null;
-  function spawn(){
-    if(curT){curT.remove();curT=null}
-    if(Date.now()-t0>=dur)return;
-    var d=document.createElement('button');
-    d.textContent='⚡';
-    d.style.cssText='position:absolute;width:58px;height:58px;border-radius:50%;border:0;font-size:26px;cursor:pointer;background:linear-gradient(135deg,#ff72b8,#ff3d9a);left:'+Math.floor(Math.random()*(ta.clientWidth-58))+'px;top:'+Math.floor(Math.random()*(ta.clientHeight-58))+'px';
-    d.onclick=function(ev){ev.stopPropagation();hits++;d.remove();curT=null;TO(setTimeout(spawn,120))};
-    ta.appendChild(d);curT=d;
-    TO(setTimeout(function(){if(curT===d){d.remove();curT=null;spawn()}},900));
-  }
-  ta.onclick=function(){misses++};
-  spawn();
-  tick=setInterval(function(){
-    var el=Date.now()-t0;
-    var gt=$('#gt'),ts=$('#ts');
-    if(gt)gt.textContent=Math.max(0,Math.ceil((dur-el)/1000))+' সেকেন্ড';
-    if(ts)ts.textContent='✅ '+hits+'    ❌ '+misses;
-    if(el>=dur)finish(S,{hits:hits,misses:misses});
-  },200);
+  shell('tap');
+  $('#gb').innerHTML='<div id="ta"></div><div class="hud" id="ts" style="justify-content:center;margin-top:10px"></div>';
+  var ta=$('#ta'),hits=0,misses=0,curT=null,C=['#ff72b8','#6ff3f5','#ffe28a','#a678ff','#4be38a','#ff8a3d'];
+  countdown(function(){
+    var t0=Date.now(),dur=S.secs*1000;
+    function spawn(){
+      if(curT){curT.remove();curT=null}
+      if(Date.now()-t0>=dur)return;
+      var d=document.createElement('button');
+      d.className='tg';d.textContent='⚡';
+      d.style.cssText='background:radial-gradient(circle at 35% 30%,#fff,'+C[Math.floor(Math.random()*C.length)]+');left:'+Math.floor(Math.random()*(ta.clientWidth-62))+'px;top:'+Math.floor(Math.random()*(ta.clientHeight-62))+'px';
+      d.onclick=function(ev){
+        ev.stopPropagation();hits++;
+        var r=ta.getBoundingClientRect(),f=document.createElement('span');f.className='fp';f.textContent='+10';f.style.cssText='left:'+(ev.clientX-r.left-10)+'px;top:'+(ev.clientY-r.top-20)+'px';ta.appendChild(f);setTimeout(function(){f.remove()},700);
+        burst(ev.clientX,ev.clientY,['✨','⭐'],6);
+        d.remove();curT=null;TO(setTimeout(spawn,120));
+      };
+      ta.appendChild(d);curT=d;
+      TO(setTimeout(function(){if(curT===d){d.remove();curT=null;spawn()}},900));
+    }
+    ta.onclick=function(){misses++;ta.classList.add('miss');setTimeout(function(){ta.classList.remove('miss')},260)};
+    spawn();
+    tick=setInterval(function(){
+      var el=Date.now()-t0,gt=$('#gt'),ts=$('#ts');
+      if(gt)gt.textContent=Math.max(0,Math.ceil((dur-el)/1000))+' সেকেন্ড';
+      if(ts)ts.innerHTML='<span>✅ '+hits+'</span><span style="margin-left:22px">❌ '+misses+'</span>';
+      if(el>=dur)finish(S,{hits:hits,misses:misses});
+    },200);
+  });
 }
 
 document.addEventListener('click',function(e){
   var t;
-  if((t=e.target.closest('[data-play]'))){startGame(t.dataset.play);return}
-  if((t=e.target.closest('[data-board]'))){board(t.dataset.board);return}
+  if((t=e.target.closest('[data-g]'))&&t.classList.contains('gc')){nav('detail',t.dataset.g);return}
+  if((t=e.target.closest('[data-rk]'))){var k=t.dataset.rk;nav('ranking',{scope:'week',game:k});return}
+  if((t=e.target.closest('[data-sc]'))){var a=cur.a||{};cur={v:'ranking',a:{scope:t.dataset.sc,game:a.game||'all'}};render();return}
+  if((t=e.target.closest('[data-gm]'))){var b2=cur.a||{};cur={v:'ranking',a:{scope:b2.scope||'week',game:t.dataset.gm}};render();return}
 });
-lobby();
+nav('lobby',null,true);
 })();
 </script>
 </body>
-  </html>
+</html>
